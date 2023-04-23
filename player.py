@@ -108,7 +108,7 @@ class Player(pygame.sprite.Sprite):
         if (click or (self.mouse_buttons[0] and ENABLE_SPRAY)) and self.reload: 
             # Create bullet
             dir = (self.mouse_pos - self.position).normalize()
-            Bullet(self, self.game.layers['bullets'], self.position, dir * BULLET_SPEED)
+            Bullet(self, self.game.layers['bullets'], self.gun.get_endpoint(), dir * BULLET_SPEED)
 
             # Handle recoil
             self.phys_velocity += RECOIL_STRENGTH * (self.position - self.mouse_pos).normalize()

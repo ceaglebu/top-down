@@ -19,6 +19,8 @@ class Gun(pygame.sprite.Sprite):
         self.offset = offset
         self.rect = ChildRect(self.image.get_rect(), offset)
 
+        self.angle = 0
+
 
     def update(self, dt):
         if self.player.mouse_pos[1] != self.player.position.y:
@@ -35,3 +37,11 @@ class Gun(pygame.sprite.Sprite):
         else:
             self.flip = 1
         self.rect = ChildRect(self.rect, (self.offset[0] * self.flip, self.offset[1]))
+        self.angle = rotate_angle
+    
+    def get_endpoint(self):
+        endpoint = Vector()
+        endpoint.x = self.rect.centerx + self.default_image.get_rect().width//2 * math.cos(math.radians(self.angle)) * self.flip
+        endpoint.y = self.rect.centery - self.default_image.get_rect().width//2 * math.sin(math.radians(self.angle))
+        return endpoint
+
