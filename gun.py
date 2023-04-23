@@ -1,5 +1,6 @@
 import pygame,os,math
 from child_rect import ChildRect
+from pygame.math import Vector2 as Vector
 
 def rot_center(image, angle, x, y):
     
@@ -10,7 +11,7 @@ def rot_center(image, angle, x, y):
 
 class Gun(pygame.sprite.Sprite):
 
-    def __init__(self, player, group, offset = (0,0)):
+    def __init__(self, player, group, offset = Vector(0,0)):
         super().__init__(group)
         self.player = player
         self.default_image = pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'shotgun.png')), .5).convert_alpha()
@@ -21,11 +22,16 @@ class Gun(pygame.sprite.Sprite):
 
     def update(self, dt):
         if self.player.mouse_pos[1] != self.player.position.y:
-            rotate_angle = math.degrees(math.atan(((self.player.mouse_pos[0] - self.player.position.x) / (self.player.mouse_pos[1] - self.player.position.y))))
+            rotate_angle = math.degrees(math.atan(((abs(self.player.mouse_pos[0] - self.player.position.x)) / (self.player.mouse_pos[1] - self.player.position.y))))
         else:
             rotate_angle = 90
         if self.player.mouse_pos[1] - self.player.position.y < 0:
             rotate_angle += 180
         rotate_angle -= 90
         self.image, self.rect = rot_center(self.default_image, rotate_angle, self.rect.centerx, self.rect.centery)
-        self.rect = ChildRect(self.rect, self.offset)
+        if self.player.facing == 'left':
+            self.flip = -1
+            self.image = pygame.transform.flip(self.image, flip_x=True, flip_y=False)
+        else:
+            self.flip = 1
+        self.rect = ChildRect(self.rect, (self.offset[0] * self.flip, self.offset[1]))

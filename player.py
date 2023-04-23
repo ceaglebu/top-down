@@ -42,7 +42,7 @@ class Player(pygame.sprite.Sprite):
         self.collision_rect = ChildRect(pygame.Rect(self.rect.center, (0,0)).inflate(Vector(self.rect.size)* COLLISION_FORGIVENESS), (0, int(self.rect.height - COLLISION_FORGIVENESS * self.rect.height) / 2))
         self.child_rects.append(self.collision_rect)
 
-        self.gun = Gun(self, self.game.layers['accessories'],(20,15))
+        self.gun = Gun(self, self.game.layers['accessories'],(20,20))
 
         # State
         self.timers = []
