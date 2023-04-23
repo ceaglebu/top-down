@@ -30,7 +30,9 @@ class Game:
         self.player = Player(self.layers['player'], self)
     
     def run(self):
-        while True:
+        run = True
+        restart = False
+        while run:
             self.events = pygame.event.get()
             dt = self.clock.tick(60) / 1000
             
@@ -38,6 +40,11 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                
+                # For ez testing
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
+                    run = False
+                    restart = True
 
 
             self.screen.fill((50,50,50))
@@ -47,6 +54,13 @@ class Game:
                 layer.draw(self.screen)
 
             pygame.display.update()
+        
+        # ez testing
+        if restart: 
+            self.__init__()
+            self.run()
+        pygame.quit()
+        sys.exit()
 
 if __name__ == '__main__':
     game = Game()
