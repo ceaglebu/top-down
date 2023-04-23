@@ -1,3 +1,4 @@
+from enemy import Enemy
 import pygame, sys
 from settings import *
 from player import Player
@@ -13,7 +14,8 @@ class Game:
             'tiles': pygame.sprite.Group(),
             'bullets': pygame.sprite.Group(),
             'player': pygame.sprite.Group(),
-            'accessories': pygame.sprite.Group()
+            'accessories': pygame.sprite.Group(),
+            'enemies': pygame.sprite.Group()
         }
 
         tile = pygame.sprite.Sprite(self.layers['tiles'])
@@ -21,6 +23,9 @@ class Game:
         tile.image.fill('black')
         tile.rect = tile.image.get_rect()
         tile.rect.center = (100, 200)
+
+        enemy = Enemy(self.layers['enemies'], self)
+        enemy.position = pygame.math.Vector2((WIN_WIDTH / 3, WIN_HEIGHT / 3))
 
         self.player = Player(self.layers['player'], self)
     
