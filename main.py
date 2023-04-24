@@ -4,6 +4,7 @@ from settings import *
 from player import Player
 from particle import * 
 from camera import SpriteGroup3d, CameraGroup
+from event_timer import EventTimer
 
 
 class Tile(pygame.sprite.Sprite):
@@ -33,6 +34,8 @@ class Game:
         }
 
         self.camera = CameraGroup(self)
+        
+        self.bullet_time = False
 
         tile = Tile(self.layers['tiles'])
         tile.image = pygame.Surface((50,50))
@@ -51,8 +54,9 @@ class Game:
         restart = False
         self.absolute_mouse_pos = Vector(pygame.mouse.get_pos())
         while run:
-            dt = self.clock.tick(60) / 1000
+            dt = self.get_dt()
             self.events = pygame.event.get()
+
             self.keys_down = pygame.key.get_pressed()
             self.mouse_buttons = pygame.mouse.get_pressed()
             self.mouse_pos = Vector(pygame.mouse.get_pos())
@@ -61,6 +65,9 @@ class Game:
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
+                
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_g:
+                    self.start_bullet_time(1000)
                 
                 # For ez testing
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
@@ -92,6 +99,23 @@ class Game:
             self.run()
         pygame.quit()
         sys.exit()
+
+    def get_dt(self):
+        dt = self.clock.tick(60) / 1000
+        if self.bullet_time:
+            dt *= BULLET_TIME_FACTOR
+        return dt
+
+    def start_bullet_time(self, length = -1):
+        self.bullet_time = True
+        if length != -1:
+            print(length * BULLET_TIME_FACTOR)
+            self.timers.append(EventTimer(length * BULLET_TIME_FACTOR, self.end_bullet_time))
+        pass
+
+    def end_bullet_time(self):
+        self.bullet_time = False
+        pass
 
 if __name__ == '__main__':
     game = Game()

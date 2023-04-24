@@ -24,9 +24,6 @@ class CameraGroup:
         
         self.mouse_offset = (Vector(mouse) - Vector(WIN_WIDTH / 2, WIN_HEIGHT / 2)) * -.015
 
-        if self.game.keys_down[pygame.K_g]:
-            self.shake()
-
         if self.is_shaking:
             self.shake_offset += Vector(rand.randint(-self.shake_intensity,self.shake_intensity) * dt, rand.randint(-self.shake_intensity,self.shake_intensity) * dt)
         else:

@@ -40,7 +40,7 @@ class Bullet(pygame.sprite.Sprite):
         for enemy in self.player.game.layers['enemies']:
             tile_mask = pygame.mask.from_surface(tile.image)
             overlap = tile_mask.overlap_mask(self.collision_mask, (self.rect.centerx - enemy.rect.centerx, self.rect.centery - enemy.rect.centery))
-            if overlap.count() > 0:
+            if enemy.alive and overlap.count() > 0:
                 enemy.take_damage(10)
                 ParticleSpawner(group=self.player.game.layers['particles'], 
                                 position=self.rect.center, 

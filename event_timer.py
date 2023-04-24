@@ -33,4 +33,7 @@ class EventTimer(Timer):
     def deactivate(self):
         self.active = False
         self.start_time = 0
-        self.function(self.args)
+        if self.args != None:
+            self.function(self.args)
+        else:
+            self.function()
