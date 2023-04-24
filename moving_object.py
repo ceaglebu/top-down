@@ -7,6 +7,7 @@ from child_rect import ChildRect
 from bullet import Bullet
 from gun import Gun
 from particle import *
+from abc import ABC, abstractmethod
 
 class MovingObject(pygame.sprite.Sprite):
 
@@ -41,9 +42,8 @@ class MovingObject(pygame.sprite.Sprite):
         self.timers = []
         self.movement_control = Vector()
 
-
     def think(self, dt):
-        pass
+        raise NameError('think was not implemented!!')
 
     
     def set_animation(self, animation):
@@ -145,9 +145,8 @@ class MovingObject(pygame.sprite.Sprite):
 
     def update(self, dt):
         self.think(dt)
-        self.handle_animation()
+        self.handle_animation(dt)
         collide = self.move(dt)
-
         self.post_collision(dt, collide)
 
         for timer in self.timers:
