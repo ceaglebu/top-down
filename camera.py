@@ -39,11 +39,14 @@ class CameraGroup:
 
     
     def shake(self, intensity = CAMERA_SHAKE_INTENSITY, length = 150):
-        self.is_shaking = True
-        self.shake_intensity = max(self.shake_intensity, intensity)
-        def end_shake(self):
-            self.is_shaking = False
-        self.game.timers.append(EventTimer(length, end_shake, self))
+        if self.is_shaking:
+            self.shake_intensity = max(self.shake_intensity, intensity)
+        else:
+            self.is_shaking = True
+            self.shake_intensity = intensity
+            def end_shake(self):
+                self.is_shaking = False
+            self.game.timers.append(EventTimer(length, end_shake, self))
 
     def draw(self):
         # Go through every item and draw it correctly

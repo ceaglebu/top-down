@@ -2,7 +2,7 @@ from bullet import Bullet
 from event_timer import EventTimer
 from gun import EnemyGun
 from load_sprites import get_animation
-from settings import ANIMATION_TILESIZE, BULLET_SPEED, ENEMY_ACTION, ENEMY_ATTACK, PLAYER_SCALE, COLLISION_FORGIVENESS, ANIMATION_FRAMERATE, FRICTION_STRENGTH, RELOAD_TIME, WIN_HEIGHT, WIN_WIDTH, ENEMY_SPEED
+from settings import *
 import os
 import pygame
 from pygame.math import Vector2 as Vector
@@ -200,7 +200,7 @@ class Enemy(pygame.sprite.Sprite):
 
         self.gun.kill()
         self.kill()
-        self.game.camera.shake()
+        self.game.camera.shake(intensity=ENEMY_DIES_SHAKE_INTENSITY)
 
     def update(self, dt):
         self.handle_animation(dt)
