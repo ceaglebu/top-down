@@ -200,6 +200,7 @@ class Enemy(pygame.sprite.Sprite):
 
         self.gun.kill()
         self.kill()
+        self.game.camera.shake()
 
     def update(self, dt):
         self.handle_animation(dt)

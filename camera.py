@@ -2,6 +2,8 @@ import pygame
 from particle import Particle
 from pygame.math import Vector2 as Vector
 from settings import *
+import random as rand
+from event_timer import EventTimer
 
 class SpriteGroup3d(pygame.sprite.Group):
     def __init__(self, z):
@@ -12,14 +14,36 @@ class CameraGroup:
     def __init__(self, game):
         self.game = game
         self.offset = Vector(0,0)
+        self.is_shaking = False
+        self.shake_offset = Vector()
+        self.shake_intensity = CAMERA_SHAKE_INTENSITY
     
     def update(self, dt):
         # apply offset
         mouse = pygame.mouse.get_pos()
         
-        self.mouse_offset = (Vector(mouse) - Vector(WIN_WIDTH / 2, WIN_HEIGHT / 2)) * -.03
+        self.mouse_offset = (Vector(mouse) - Vector(WIN_WIDTH / 2, WIN_HEIGHT / 2)) * -.015
 
-        self.offset = self.mouse_offset
+        if self.game.keys_down[pygame.K_g]:
+            self.shake()
+
+        if self.is_shaking:
+            self.shake_offset += Vector(rand.randint(-self.shake_intensity,self.shake_intensity) * dt, rand.randint(-self.shake_intensity,self.shake_intensity) * dt)
+        else:
+            if self.shake_offset.magnitude() > 2:
+                self.shake_offset -= self.shake_offset * 2 * dt
+            elif self.shake_offset.magnitude() > 0:
+                self.shake_offset = Vector()
+
+        self.offset = self.mouse_offset + self.shake_offset
+
+    
+    def shake(self, intensity = CAMERA_SHAKE_INTENSITY, length = 150):
+        self.is_shaking = True
+        self.shake_intensity = max(self.shake_intensity, intensity)
+        def end_shake(self):
+            self.is_shaking = False
+        self.game.timers.append(EventTimer(length, end_shake, self))
 
     def draw(self):
         # Go through every item and draw it correctly

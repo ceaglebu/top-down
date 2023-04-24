@@ -48,7 +48,7 @@ class Game:
         restart = False
         self.absolute_mouse_pos = Vector(pygame.mouse.get_pos())
         while run:
-            dt = self.clock.tick(120) / 1000
+            dt = self.clock.tick(60) / 1000
             self.events = pygame.event.get()
             self.keys_down = pygame.key.get_pressed()
             self.mouse_buttons = pygame.mouse.get_pressed()
@@ -57,7 +57,6 @@ class Game:
             for event in self.events:
                 if event.type == pygame.QUIT:
                     pygame.quit()
-                    print(self.timers)
                     sys.exit()
                 
                 # For ez testing
@@ -70,7 +69,6 @@ class Game:
             
             for layer in self.layers.values():
                 layer.update(dt)
-                # layer.draw(self.screen)
             
             self.camera.update(dt)
             self.camera.draw()

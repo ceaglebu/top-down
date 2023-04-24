@@ -25,6 +25,8 @@ BULLET_SPEED = 1500
 RELOAD_TIME = .2
 ENABLE_SPRAY = True
 
+CAMERA_SHAKE_INTENSITY = 200
+
 EVENTS = {
     'player_roll': pygame.USEREVENT + 1
 }
