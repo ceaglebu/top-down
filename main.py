@@ -10,6 +10,7 @@ class Game:
         pygame.init()
         self.screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
         self.clock = pygame.time.Clock()
+        self.timers = []
         
         self.layers = {
             'tiles': pygame.sprite.Group(),
@@ -55,6 +56,9 @@ class Game:
             for layer in self.layers.values():
                 layer.update(dt)
                 layer.draw(self.screen)
+            
+            for timer in self.timers:
+                timer.update()
 
             pygame.display.update()
         

@@ -40,7 +40,6 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.center = ((0, 0))
 
         self.health = 100
-        self.timers = []
         self.child_rects = []
         self.collision_rect = ChildRect(pygame.Rect(self.rect.center, (0, 0)).inflate(Vector(
             self.rect.size) * COLLISION_FORGIVENESS), (0, int(self.rect.height - COLLISION_FORGIVENESS * self.rect.height) / 2))
@@ -48,7 +47,10 @@ class Enemy(pygame.sprite.Sprite):
 
         self.gun = EnemyGun(self, game, self.game.layers['accessories'], (20, 15))
         self.can_act = True
-        self.can_attack = True
+        self.can_attack = False
+        def start_attack(self):
+            self.can_attack = True
+        self.game.timers.append(EventTimer(ENEMY_ATTACK, start_attack, self))
         self.movement_control = Vector()
 
     
@@ -74,7 +76,7 @@ class Enemy(pygame.sprite.Sprite):
             self.can_act = False
             def reset(self):
                 self.can_act = True
-            self.timers.append(EventTimer(ENEMY_ACTION * 1000, reset, self))
+            self.game.timers.append(EventTimer(ENEMY_ACTION * 1000, reset, self))
             
 
     def set_animation(self, animation):
@@ -180,7 +182,7 @@ class Enemy(pygame.sprite.Sprite):
 
         def reset(self):
             self.can_attack = True
-        self.timers.append(EventTimer(ENEMY_ATTACK * 1000, reset, self))
+        self.game.timers.append(EventTimer(ENEMY_ATTACK * 1000, reset, self))
 
     def die(self):
 
@@ -200,8 +202,6 @@ class Enemy(pygame.sprite.Sprite):
         self.kill()
 
     def update(self, dt):
-        self.think(dt)
         self.handle_animation(dt)
         self.handle_movement(dt)
-        for timer in self.timers:
-            timer.update()
+        self.think(dt)

@@ -60,7 +60,6 @@ class Player(pygame.sprite.Sprite):
         self.gun = Gun(self, self.game.layers['accessories'],(20,20))
 
         # State
-        self.timers = []
         self.is_rolling = False
         self.can_roll = True
         self.reload = True
@@ -103,7 +102,7 @@ class Player(pygame.sprite.Sprite):
             
             def reset_roll(self):
                 self.can_roll = True
-            self.timers.append(EventTimer(ROLL_COOLDOWN * 1000, reset_roll, self))
+            self.game.timers.append(EventTimer(ROLL_COOLDOWN * 1000, reset_roll, self))
 
             def end_roll(self):
                 self.is_rolling = False
@@ -111,7 +110,7 @@ class Player(pygame.sprite.Sprite):
                 self.collision_rect.offset.y = self.collision_rect.default_offset.y
                 if self.active_animation == self.animations['roll']:
                     self.set_animation(self.animations['idle'])
-            self.timers.append(EventTimer(3 * 1000 / FRICTION_STRENGTH, end_roll, self))
+            self.game.timers.append(EventTimer(3 * 1000 / FRICTION_STRENGTH, end_roll, self))
 
             if self.movement_control.magnitude() != 0:
                 self.phys_velocity += self.movement_control.normalize() * ROLL_STRENGTH
@@ -143,7 +142,7 @@ class Player(pygame.sprite.Sprite):
             self.reload = False
             def reload(self):
                 self.reload = True
-            self.timers.append(EventTimer(RELOAD_TIME * 1000, reload, self))
+            self.game.timers.append(EventTimer(RELOAD_TIME * 1000, reload, self))
         elif click and not self.reload:
             # play clicking sound effect
             pass
@@ -164,9 +163,9 @@ class Player(pygame.sprite.Sprite):
         def spawn_roll_particles(self):
             if self.is_rolling:
                 self.roll_particle_spawner.spawn(4, self.collision_rect.midbottom)
-                self.timers.append(EventTimer(ROLL_PARTICLE_COOLDOWN * 1000, spawn_roll_particles, self))
+                self.game.timers.append(EventTimer(ROLL_PARTICLE_COOLDOWN * 1000, spawn_roll_particles, self))
                         
-        self.timers.append(EventTimer(ROLL_PARTICLE_COOLDOWN * 1000, spawn_roll_particles, self))
+        self.game.timers.append(EventTimer(ROLL_PARTICLE_COOLDOWN * 1000, spawn_roll_particles, self))
         
         pass
 
@@ -246,5 +245,3 @@ class Player(pygame.sprite.Sprite):
         self.handle_controls(dt)
         self.handle_animation(dt)
         self.handle_movement(dt)
-        for timer in self.timers:
-            timer.update()
