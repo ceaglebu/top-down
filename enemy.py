@@ -29,7 +29,7 @@ class Enemy(MovingObject):
         self.alive = True
 
         self.gun = EnemyGun(
-            self, game, self.game.layers['accessories'], (20, 15))
+            self.game.layers['accessories'],  game, owner=self, offset=(20, 15))
         self.can_act = True
         self.can_attack = False
 

@@ -7,7 +7,7 @@ from event_timer import EventTimer, Timer
 from load_sprites import get_animation
 from child_rect import ChildRect
 from bullet import Bullet
-from gun import Gun
+from gun import PlayerGun
 from particle import *
 from moving_object import MovingObject
 
@@ -39,7 +39,8 @@ class Player(MovingObject):
                                                      angle_range=(150, 390),
                                                      recallable=True)
 
-        self.gun = Gun(self, self.game.layers['accessories'], (20, 20))
+        self.gun = PlayerGun(
+            self.game.layers['accessories'], self.game, self, (20, 20))
 
         # State
         self.is_rolling = False
@@ -80,7 +81,7 @@ class Player(MovingObject):
         self.collision_rect.offset.y = self.collision_rect.default_offset.y
         if self.active_animation == self.animations['roll']:
             self.set_animation(self.animations['idle'])
-    
+
     def start_roll_particles(self):
         def spawn_roll_particles(self):
             if self.is_rolling:
