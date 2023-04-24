@@ -45,8 +45,12 @@ class ParticleSpawner():
             self.group.particles.append(Particle(self.color, pos, size, velo, accel_strength, shrinkspeed))
 
 class ParticleGroup():
-    def __init__(self):
+    def __init__(self, z):
         self.particles = []
+        self.z = z
+
+    def sprites(self):
+        return self.particles
 
     def update(self, dt):
         for particle in self.particles:

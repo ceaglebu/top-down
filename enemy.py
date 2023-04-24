@@ -2,7 +2,7 @@ from bullet import Bullet
 from event_timer import EventTimer
 from gun import EnemyGun
 from load_sprites import get_animation
-from settings import ANIMATION_TILESIZE, BULLET_SPEED, ENEMY_ACTION, ENEMY_ATTACK, PLAYER_SCALE, COLLISION_FORGIVENESS, ANIMATION_FRAMERATE, FRICTION_STRENGTH, RELOAD_TIME, WIN_HEIGHT, WIN_WIDTH, ENEMY_SPEED
+from settings import *
 import os
 import pygame
 from pygame.math import Vector2 as Vector
@@ -40,6 +40,7 @@ class Enemy(pygame.sprite.Sprite):
         self.rect.center = ((0, 0))
 
         self.health = 100
+        self.alive = True
         self.child_rects = []
         self.collision_rect = ChildRect(pygame.Rect(self.rect.center, (0, 0)).inflate(Vector(
             self.rect.size) * COLLISION_FORGIVENESS), (0, int(self.rect.height - COLLISION_FORGIVENESS * self.rect.height) / 2))
@@ -185,9 +186,8 @@ class Enemy(pygame.sprite.Sprite):
         self.game.timers.append(EventTimer(ENEMY_ATTACK * 1000, reset, self))
 
     def die(self):
-
-        #death animate
-        ParticleSpawner(group=self.game.layers['particles'], 
+        def death_explosion(self):
+            ParticleSpawner(group=self.game.layers['particles'], 
                                 position=self.rect.center, 
                                 position_radius = 30, 
                                 count=20, 
@@ -197,11 +197,20 @@ class Enemy(pygame.sprite.Sprite):
                                 acceleration_strength_range=(5,15), 
                                 time_range=(.2,1), 
                                 angle_range = (0,360))
+            self.gun.kill()
+            self.kill()
+            self.game.camera.shake(intensity=ENEMY_DIES_SHAKE_INTENSITY)
+        self.alive = False
 
-        self.gun.kill()
-        self.kill()
+        self.image.set_colorkey((0,0,0))
+        mask = pygame.mask.from_surface(self.image)
+        self.image.blit(mask.to_surface(unsetcolor=(0,0,0,0), setcolor=(255,0,0,50)), (0,0))
+
+        self.game.start_bullet_time(700)
+        self.game.timers.append(EventTimer(150, death_explosion, self))
 
     def update(self, dt):
-        self.handle_animation(dt)
-        self.handle_movement(dt)
-        self.think(dt)
+        if self.alive:    
+            self.handle_animation(dt)
+            self.handle_movement(dt)
+            self.think(dt)

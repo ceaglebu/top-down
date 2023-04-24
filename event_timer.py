@@ -19,6 +19,9 @@ class Timer:
         curr_time = pygame.time.get_ticks()
         if self.active and curr_time - self.start_time >= self.time:
             self.deactivate()
+            return False
+        else:
+            return True
 
 class EventTimer(Timer):
     def __init__(self, time, function, args=None):
@@ -30,4 +33,7 @@ class EventTimer(Timer):
     def deactivate(self):
         self.active = False
         self.start_time = 0
-        self.function(self.args)
+        if self.args != None:
+            self.function(self.args)
+        else:
+            self.function()
