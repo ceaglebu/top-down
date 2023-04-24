@@ -4,6 +4,7 @@ import os
 import pygame
 from pygame.math import Vector2 as Vector
 from child_rect import ChildRect
+from particle import * 
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self, group, game):
@@ -136,6 +137,16 @@ class Enemy(pygame.sprite.Sprite):
 
     def die(self):
         #death animate
+        ParticleSpawner(group=self.game.layers['particles'], 
+                                position=self.rect.center, 
+                                position_radius = 30, 
+                                count=20, 
+                                color='yellow', 
+                                size_range=(10,50), 
+                                velocity_range=(200,1500), 
+                                acceleration_strength_range=(5,15), 
+                                time_range=(.2,1), 
+                                angle_range = (0,360))
         self.kill()
 
     def update(self, dt):

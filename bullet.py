@@ -3,6 +3,7 @@ from pygame.math import Vector2 as Vector
 from settings import *
 from child_rect import ChildRect
 from load_sprites import get_image, get_animation
+from particle import ParticleSpawner
 
 class Bullet(pygame.sprite.Sprite):
     def __init__(self, player, group, pos, velo, accel = Vector()):
@@ -41,4 +42,14 @@ class Bullet(pygame.sprite.Sprite):
             overlap = tile_mask.overlap_mask(self.collision_mask, (self.rect.centerx - enemy.rect.centerx, self.rect.centery - enemy.rect.centery))
             if overlap.count() > 0:
                 enemy.take_damage(10)
+                ParticleSpawner(group=self.player.game.layers['particles'], 
+                                position=self.rect.center, 
+                                position_radius = 30, 
+                                count=5, 
+                                color='red', 
+                                size_range=(5,10), 
+                                velocity_range=(200,500), 
+                                acceleration_strength_range=(2,5), 
+                                time_range=(.2,1), 
+                                angle_range = (0,360))
                 self.kill()

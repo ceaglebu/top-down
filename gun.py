@@ -20,6 +20,7 @@ class Gun(pygame.sprite.Sprite):
         self.rect = ChildRect(self.image.get_rect(), offset)
 
         self.angle = 0
+        self.flip = 1
 
 
     def update(self, dt):

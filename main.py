@@ -2,6 +2,7 @@ from enemy import Enemy
 import pygame, sys
 from settings import *
 from player import Player
+from particle import * 
 
 class Game:
 
@@ -15,7 +16,8 @@ class Game:
             'bullets': pygame.sprite.Group(),
             'player': pygame.sprite.Group(),
             'accessories': pygame.sprite.Group(),
-            'enemies': pygame.sprite.Group()
+            'enemies': pygame.sprite.Group(),
+            'particles': ParticleGroup()
         }
 
         tile = pygame.sprite.Sprite(self.layers['tiles'])

@@ -6,6 +6,7 @@ from load_sprites import get_animation
 from child_rect import ChildRect
 from bullet import Bullet
 from gun import Gun
+from particle import *
 
 class Player(pygame.sprite.Sprite):
 
@@ -109,6 +110,16 @@ class Player(pygame.sprite.Sprite):
             # Create bullet
             dir = (self.mouse_pos - self.position).normalize()
             Bullet(self, self.game.layers['bullets'], self.gun.get_endpoint(), dir * BULLET_SPEED)
+            ParticleSpawner(group=self.game.layers['particles'], 
+                                position=self.gun.get_endpoint(), 
+                                position_radius = 5, 
+                                count=3, 
+                                color='yellow', 
+                                size_range=(1, 10), 
+                                velocity_range=(200,1500), 
+                                acceleration_strength_range=(5,15), 
+                                time_range=(.2,1), 
+                                angle_range = (self.gun.angle, self.gun.angle))
 
             # Handle recoil
             self.phys_velocity += RECOIL_STRENGTH * (self.position - self.mouse_pos).normalize()
