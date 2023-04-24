@@ -38,6 +38,7 @@ class Gun(pygame.sprite.Sprite):
         else:
             self.flip = 1
         self.rect = ChildRect(self.rect, (self.offset[0] * self.flip, self.offset[1]))
+
         self.angle = -self.flip * (90 - self.flip * 90 - rotate_angle)
     
     def get_endpoint(self):
@@ -45,4 +46,44 @@ class Gun(pygame.sprite.Sprite):
         endpoint.x = self.rect.centerx + self.default_image.get_rect().width//2 * math.cos(math.radians(self.angle))
         endpoint.y = self.rect.centery - self.default_image.get_rect().width//2 * math.sin(math.radians(self.angle))
         return endpoint
+
+
+
+
+class EnemyGun(pygame.sprite.Sprite):
+
+    def __init__(self, enemy, game, group, offset = Vector(0,0)):
+        super().__init__(group)
+        self.enemy = enemy
+        self.game = game
+        self.default_image = pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'shotgun.png')), .5).convert_alpha()
+        self.image = pygame.transform.rotate(self.default_image, 0)
+        self.offset = offset
+        self.rect = ChildRect(self.image.get_rect(), offset)
+
+        self.angle = 0
+        self.flip = 1
+    
+    def get_endpoint(self):
+        endpoint = Vector()
+        endpoint.x = self.rect.centerx + self.default_image.get_rect().width//2 * math.cos(math.radians(self.angle))
+        endpoint.y = self.rect.centery - self.default_image.get_rect().width//2 * math.sin(math.radians(self.angle))
+        return endpoint
+
+
+    def update(self, dt):
+        if self.game.player.position[1] != self.enemy.position.y:
+            rotate_angle = math.degrees(math.atan(((abs(self.game.player.position[0] - self.enemy.position.x)) / (self.game.player.position[1] - self.enemy.position.y))))
+        else:
+            rotate_angle = 90
+        if self.game.player.position[1] - self.enemy.position.y < 0:
+            rotate_angle += 180
+        rotate_angle -= 90
+        self.image, self.rect = rot_center(self.default_image, rotate_angle, self.rect.centerx, self.rect.centery)
+        if self.enemy.facing == 'left':
+            self.flip = -1
+            self.image = pygame.transform.flip(self.image, flip_x=True, flip_y=False)
+        else:
+            self.flip = 1
+        self.rect = ChildRect(self.rect, (self.offset[0] * self.flip, self.offset[1]))
 
