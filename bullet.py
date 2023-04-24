@@ -18,17 +18,17 @@ class Bullet(pygame.sprite.Sprite):
         if velo[1] > 0:
             rotate_angle += 180
         self.image = pygame.transform.rotate(self.image, rotate_angle)
-        self.rect = self.image.get_rect()
+        self.rect = self.image.get_rect(center=pos)
         self.collision_mask = pygame.mask.from_surface(self.image)
 
-        self.pos = Vector(pos)
+        self.position = Vector(pos)
         self.velo = Vector(velo)
         self.accel = Vector(accel)
 
     def update(self, dt):
         self.velo += self.accel * dt
-        self.pos += self.velo * dt
-        self.rect.center = self.pos
+        self.position += self.velo * dt
+        self.rect.center = self.position
         self.collision_mask = pygame.mask.from_surface(self.image)
         if self.rect.right < 0 or self.rect.left > WIN_WIDTH or self.rect.bottom < 0 or self.rect.top > WIN_HEIGHT:
             self.kill()

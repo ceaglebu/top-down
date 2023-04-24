@@ -46,7 +46,7 @@ class Player(pygame.sprite.Sprite):
                                 position_radius = 5, 
                                 count=3, 
                                 color=((10,10,10)), 
-                                size_range=(5, 8), 
+                                size_range=(10,20), 
                                 velocity_range=(50,100), 
                                 acceleration_strength_range=(5,7), 
                                 time_range=(.2,1), 
@@ -133,7 +133,7 @@ class Player(pygame.sprite.Sprite):
                                 velocity_range=(200,1500), 
                                 acceleration_strength_range=(5,15), 
                                 time_range=(.2,1), 
-                                angle_range = (self.gun.angle, self.gun.angle))
+                                angle_range = (self.gun.angle -30, self.gun.angle + 30))
 
             # Handle recoil
             self.phys_velocity += RECOIL_STRENGTH * (self.position - self.mouse_pos).normalize()
@@ -164,7 +164,7 @@ class Player(pygame.sprite.Sprite):
             if self.is_rolling:
                 self.roll_particle_spawner.spawn(4, self.collision_rect.midbottom)
                 self.game.timers.append(EventTimer(ROLL_PARTICLE_COOLDOWN * 1000, spawn_roll_particles, self))
-                        
+        spawn_roll_particles(self)                
         self.game.timers.append(EventTimer(ROLL_PARTICLE_COOLDOWN * 1000, spawn_roll_particles, self))
         
         pass

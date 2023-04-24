@@ -3,6 +3,13 @@ import pygame, sys
 from settings import *
 from player import Player
 from particle import * 
+from camera import SpriteGroup3d, CameraGroup
+
+
+class Tile(pygame.sprite.Sprite):
+    def __init__(self, group):
+        super().__init__(group)
+        self.position = (0,0)
 
 class Game:
 
@@ -13,20 +20,23 @@ class Game:
         self.timers = []
         
         self.layers = {
-            'tiles': pygame.sprite.Group(),
-            'bullets': pygame.sprite.Group(),
-            'player-particles': ParticleGroup(),
-            'player': pygame.sprite.Group(),
-            'accessories': pygame.sprite.Group(),
-            'enemies': pygame.sprite.Group(),
-            'particles': ParticleGroup()
+            'tiles': SpriteGroup3d(1),
+            'bullets': SpriteGroup3d(2),
+            'player-particles': ParticleGroup(3),
+            'player': SpriteGroup3d(4),
+            'accessories': SpriteGroup3d(5),
+            'enemies': SpriteGroup3d(6),
+            'particles': ParticleGroup(7)
         }
 
-        tile = pygame.sprite.Sprite(self.layers['tiles'])
+        self.camera = CameraGroup(self)
+
+        tile = Tile(self.layers['tiles'])
         tile.image = pygame.Surface((50,50))
         tile.image.fill('black')
         tile.rect = tile.image.get_rect()
         tile.rect.center = (100, 200)
+        tile.position = tile.rect.center
 
         enemy = Enemy(self.layers['enemies'], self)
         enemy.position = pygame.math.Vector2((WIN_WIDTH / 3, WIN_HEIGHT / 3))
@@ -55,7 +65,8 @@ class Game:
             
             for layer in self.layers.values():
                 layer.update(dt)
-                layer.draw(self.screen)
+                # layer.draw(self.screen)
+            self.camera.draw()
             
             for timer in self.timers:
                 timer.update()

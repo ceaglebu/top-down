@@ -18,6 +18,7 @@ class Gun(pygame.sprite.Sprite):
         self.image = pygame.transform.rotate(self.default_image, 0)
         self.offset = offset
         self.rect = ChildRect(self.image.get_rect(), offset)
+        self.position = Vector(self.rect.center)
 
         self.angle = 0
         self.flip = 1
@@ -40,6 +41,8 @@ class Gun(pygame.sprite.Sprite):
         self.rect = ChildRect(self.rect, (self.offset[0] * self.flip, self.offset[1]))
 
         self.angle = -self.flip * (90 - self.flip * 90 - rotate_angle)
+        self.position = Vector(self.rect.center)
+
     
     def get_endpoint(self):
         endpoint = Vector()
@@ -60,6 +63,8 @@ class EnemyGun(pygame.sprite.Sprite):
         self.image = pygame.transform.rotate(self.default_image, 0)
         self.offset = offset
         self.rect = ChildRect(self.image.get_rect(), offset)
+        self.position = Vector(self.rect.center)
+
 
         self.angle = 0
         self.flip = 1
@@ -86,4 +91,5 @@ class EnemyGun(pygame.sprite.Sprite):
         else:
             self.flip = 1
         self.rect = ChildRect(self.rect, (self.offset[0] * self.flip, self.offset[1]))
+        self.position = Vector(self.rect.center)
 
