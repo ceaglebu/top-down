@@ -14,6 +14,7 @@ class Game:
         self.layers = {
             'tiles': pygame.sprite.Group(),
             'bullets': pygame.sprite.Group(),
+            'player-particles': ParticleGroup(),
             'player': pygame.sprite.Group(),
             'accessories': pygame.sprite.Group(),
             'enemies': pygame.sprite.Group(),
@@ -37,7 +38,7 @@ class Game:
         while run:
             self.events = pygame.event.get()
             dt = self.clock.tick(60) / 1000
-            
+
             for event in self.events:
                 if event.type == pygame.QUIT:
                     pygame.quit()

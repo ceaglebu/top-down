@@ -39,6 +39,20 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.center = ((0, 0))
 
+        # Particles
+
+        self.roll_particle_spawner = ParticleSpawner(group=self.game.layers['player-particles'], 
+                                position=(0,0), 
+                                position_radius = 5, 
+                                count=3, 
+                                color=((10,10,10)), 
+                                size_range=(5, 8), 
+                                velocity_range=(50,100), 
+                                acceleration_strength_range=(5,7), 
+                                time_range=(.2,1), 
+                                angle_range = (150,390),
+                                recallable=True)
+
         # Sprite
         self.collision_rect = ChildRect(pygame.Rect(self.rect.center, (0,0)).inflate(Vector(self.rect.size)* COLLISION_FORGIVENESS), (0, int(self.rect.height - COLLISION_FORGIVENESS * self.rect.height) / 2))
         self.child_rects.append(self.collision_rect)
@@ -85,6 +99,7 @@ class Player(pygame.sprite.Sprite):
             self.collision_rect.height *= 3 / 4
             self.collision_rect.offset.y = int((self.rect.bottom - self.collision_rect.bottom) * COLLISION_FORGIVENESS)
             self.set_animation(self.animations['roll'])
+            self.start_roll_particles()
             
             def reset_roll(self):
                 self.can_roll = True
@@ -145,6 +160,16 @@ class Player(pygame.sprite.Sprite):
             self.image = pygame.transform.flip(self.image, True, False).convert_alpha()
         pass
         
+    def start_roll_particles(self):
+        def spawn_roll_particles(self):
+            if self.is_rolling:
+                self.roll_particle_spawner.spawn(4, self.collision_rect.midbottom)
+                self.timers.append(EventTimer(ROLL_PARTICLE_COOLDOWN * 1000, spawn_roll_particles, self))
+                        
+        self.timers.append(EventTimer(ROLL_PARTICLE_COOLDOWN * 1000, spawn_roll_particles, self))
+        
+        pass
+
     def handle_movement(self, dt):
         self.phys_acceleration = self.phys_velocity * -FRICTION_STRENGTH
         self.phys_velocity += self.phys_acceleration * dt

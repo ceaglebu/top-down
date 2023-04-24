@@ -143,7 +143,7 @@ class Enemy(pygame.sprite.Sprite):
                                 count=20, 
                                 color='yellow', 
                                 size_range=(10,50), 
-                                velocity_range=(200,1500), 
+                                velocity_range=(200,2500), 
                                 acceleration_strength_range=(5,15), 
                                 time_range=(.2,1), 
                                 angle_range = (0,360))
