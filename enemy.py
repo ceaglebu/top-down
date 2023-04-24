@@ -186,9 +186,7 @@ class Enemy(pygame.sprite.Sprite):
         self.game.timers.append(EventTimer(ENEMY_ATTACK * 1000, reset, self))
 
     def die(self):
-
-        #death animate
-        def enemy_death(self):
+        def death_explosion(self):
             ParticleSpawner(group=self.game.layers['particles'], 
                                 position=self.rect.center, 
                                 position_radius = 30, 
@@ -203,8 +201,13 @@ class Enemy(pygame.sprite.Sprite):
             self.kill()
             self.game.camera.shake(intensity=ENEMY_DIES_SHAKE_INTENSITY)
         self.alive = False
+
+        self.image.set_colorkey((0,0,0))
+        mask = pygame.mask.from_surface(self.image)
+        self.image.blit(mask.to_surface(unsetcolor=(0,0,0,0), setcolor=(255,0,0,50)), (0,0))
+
         self.game.start_bullet_time(700)
-        self.game.timers.append(EventTimer(150, enemy_death, self))
+        self.game.timers.append(EventTimer(150, death_explosion, self))
 
     def update(self, dt):
         if self.alive:    
