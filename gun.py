@@ -25,11 +25,12 @@ class Gun(pygame.sprite.Sprite):
 
 
     def update(self, dt):
-        if self.player.mouse_pos[1] != self.player.position.y:
-            rotate_angle = math.degrees(math.atan(((abs(self.player.mouse_pos[0] - self.player.position.x)) / (self.player.mouse_pos[1] - self.player.position.y))))
+        mouse_pos = self.player.game.mouse_pos
+        if mouse_pos[1] != self.player.position.y:
+            rotate_angle = math.degrees(math.atan(((abs(mouse_pos[0] - self.player.position.x)) / (mouse_pos[1] - self.player.position.y))))
         else:
             rotate_angle = 90
-        if self.player.mouse_pos[1] - self.player.position.y < 0:
+        if mouse_pos[1] - self.player.position.y < 0:
             rotate_angle += 180
         rotate_angle -= 90
         self.image, self.rect = rot_center(self.default_image, rotate_angle, self.rect.centerx, self.rect.centery)

@@ -65,26 +65,24 @@ class Player(pygame.sprite.Sprite):
         self.reload = True
 
     def handle_controls(self, dt):
-        self.keys_down = pygame.key.get_pressed()
-        self.mouse_buttons = pygame.mouse.get_pressed()
-        self.mouse_pos = pygame.mouse.get_pos()
-        if self.mouse_pos[0] > self.rect.centerx:
+        
+        if self.game.mouse_pos[0] > self.rect.centerx:
             self.facing = 'right'
         else:
             self.facing = 'left'
 
         self.movement_control = Vector()
 
-        if self.keys_down[pygame.K_w] or self.keys_down[pygame.K_UP]:
+        if self.game.keys_down[pygame.K_w] or self.game.keys_down[pygame.K_UP]:
             self.movement_control.y = -1
-        elif self.keys_down[pygame.K_s] or self.keys_down[pygame.K_DOWN]:
+        elif self.game.keys_down[pygame.K_s] or self.game.keys_down[pygame.K_DOWN]:
             self.movement_control.y = 1
         else:
             self.movement_control.y = 0
 
-        if self.keys_down[pygame.K_d] or self.keys_down[pygame.K_RIGHT]:
+        if self.game.keys_down[pygame.K_d] or self.game.keys_down[pygame.K_RIGHT]:
             self.movement_control.x = 1
-        elif self.keys_down[pygame.K_a] or self.keys_down[pygame.K_LEFT]:
+        elif self.game.keys_down[pygame.K_a] or self.game.keys_down[pygame.K_LEFT]:
             self.movement_control.x = -1
         else:
             self.movement_control.x = 0
@@ -92,7 +90,7 @@ class Player(pygame.sprite.Sprite):
         if self.movement_control.magnitude() != 0:
             self.movement_control = self.movement_control.normalize() * PLAYER_SPEED
 
-        if self.keys_down[pygame.K_SPACE] and self.can_roll and self.phys_velocity.magnitude() <= 500 and self.movement_control.magnitude() != 0:
+        if self.game.keys_down[pygame.K_SPACE] and self.can_roll and self.phys_velocity.magnitude() <= 500 and self.movement_control.magnitude() != 0:
             self.is_rolling = True
             self.can_roll = False
             self.collision_rect.height *= 3 / 4
@@ -120,9 +118,9 @@ class Player(pygame.sprite.Sprite):
             if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
                 click = True
             
-        if (click or (self.mouse_buttons[0] and ENABLE_SPRAY)) and self.reload: 
+        if (click or (self.game.mouse_buttons[0] and ENABLE_SPRAY)) and self.reload: 
             # Create bullet
-            dir = (self.mouse_pos - self.position).normalize()
+            dir = (self.game.mouse_pos - self.position).normalize()
             Bullet(self, self.game.layers['bullets'], self.gun.get_endpoint(), dir * BULLET_SPEED)
             ParticleSpawner(group=self.game.layers['particles'], 
                                 position=self.gun.get_endpoint(), 
@@ -136,7 +134,7 @@ class Player(pygame.sprite.Sprite):
                                 angle_range = (self.gun.angle -30, self.gun.angle + 30))
 
             # Handle recoil
-            self.phys_velocity += RECOIL_STRENGTH * (self.position - self.mouse_pos).normalize()
+            self.phys_velocity += RECOIL_STRENGTH * (self.position - self.game.mouse_pos).normalize()
 
             # Handle reload
             self.reload = False
