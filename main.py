@@ -1,5 +1,5 @@
 from enemy import Enemy
-import pygame, sys
+import pygame, sys,os
 from settings import *
 from player import Player
 from particle import * 
@@ -15,6 +15,9 @@ class Game:
 
     def __init__(self):
         pygame.init()
+        cursor_surface = pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'crosshair.png')), 2.5)
+        cursor = pygame.cursors.Cursor((10,10), cursor_surface)
+        pygame.mouse.set_cursor(cursor)
         self.screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
         self.clock = pygame.time.Clock()
         self.timers = []
