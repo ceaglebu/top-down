@@ -206,8 +206,8 @@ class Enemy(pygame.sprite.Sprite):
         mask = pygame.mask.from_surface(self.image)
         self.image.blit(mask.to_surface(unsetcolor=(0,0,0,0), setcolor=(255,0,0,50)), (0,0))
 
-        self.game.start_bullet_time(700)
-        self.game.timers.append(EventTimer(150, death_explosion, self))
+        self.game.start_bullet_time(200)
+        self.game.timers.append(EventTimer(200, death_explosion, self))
 
     def update(self, dt):
         if self.alive:    

@@ -109,8 +109,8 @@ class Game:
     def start_bullet_time(self, length = -1):
         self.bullet_time = True
         if length != -1:
-            print(length * BULLET_TIME_FACTOR)
-            self.timers.append(EventTimer(length * BULLET_TIME_FACTOR, self.end_bullet_time))
+            # print(length * BULLET_TIME_FACTOR)
+            self.timers.append(EventTimer(length, self.end_bullet_time))
         pass
 
     def end_bullet_time(self):
