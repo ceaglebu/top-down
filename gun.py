@@ -61,6 +61,15 @@ class EnemyGun(pygame.sprite.Sprite):
         self.offset = offset
         self.rect = ChildRect(self.image.get_rect(), offset)
 
+        self.angle = 0
+        self.flip = 1
+    
+    def get_endpoint(self):
+        endpoint = Vector()
+        endpoint.x = self.rect.centerx + self.default_image.get_rect().width//2 * math.cos(math.radians(self.angle))
+        endpoint.y = self.rect.centery - self.default_image.get_rect().width//2 * math.sin(math.radians(self.angle))
+        return endpoint
+
 
     def update(self, dt):
         if self.game.player.position[1] != self.enemy.position.y:

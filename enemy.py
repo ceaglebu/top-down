@@ -49,17 +49,23 @@ class Enemy(pygame.sprite.Sprite):
         self.gun = EnemyGun(self, game, self.game.layers['accessories'], (20, 15))
         self.can_act = True
         self.can_attack = True
+        self.movement_control = Vector()
+
     
     def ai_move(self):
+        
         player_pos = self.game.player.position
-        self.movement_control = Vector(
-            player_pos.x - self.position.x, player_pos.y - self.position.y)
+        dir = Vector(
+            player_pos - self.position)
 
-        if self.movement_control.magnitude() != 0:
-            self.movement_control = self.movement_control.normalize() * ENEMY_SPEED
+        if dir.magnitude() != 0:
+            self.phys_velocity += dir.normalize() * ENEMY_SPEED
+        if dir[0] < 0:
+            self.facing = 'left'
+        else:
+            self.facing = 'right'
 
     def think(self, dt):
-        self.movement_control = Vector()
         if self.can_act:
             if self.can_attack:
                 self.attack()
@@ -167,7 +173,7 @@ class Enemy(pygame.sprite.Sprite):
     def attack(self):
         dir = (self.game.player.position - self.position).normalize()
         Bullet(self, self.game.layers['bullets'],
-               self.position, dir * BULLET_SPEED)
+                self.gun.get_endpoint(), dir * BULLET_SPEED)
 
         # Handle reload
         self.can_attack = False
