@@ -38,11 +38,11 @@ class Gun(pygame.sprite.Sprite):
         else:
             self.flip = 1
         self.rect = ChildRect(self.rect, (self.offset[0] * self.flip, self.offset[1]))
-        self.angle = rotate_angle
+        self.angle = -self.flip * (90 - self.flip * 90 - rotate_angle)
     
     def get_endpoint(self):
         endpoint = Vector()
-        endpoint.x = self.rect.centerx + self.default_image.get_rect().width//2 * math.cos(math.radians(self.angle)) * self.flip
+        endpoint.x = self.rect.centerx + self.default_image.get_rect().width//2 * math.cos(math.radians(self.angle))
         endpoint.y = self.rect.centery - self.default_image.get_rect().width//2 * math.sin(math.radians(self.angle))
         return endpoint
 
