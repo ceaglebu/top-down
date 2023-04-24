@@ -20,28 +20,17 @@ class Gun(GameObject):
         endpoint.y = self.rect.centery - self.default_image.get_rect().width//2 * math.sin(math.radians(self.angle))
         return endpoint
     
-    def point(self):
-        pass
-    
-    def shoot(self, dir):
-        pass
-
-    def update(self, dt):
-        self.point()
-
-class PlayerGun(Gun):
-    def __init__(self, group, game, owner, offset=Vector(0, 0)):
-        super().__init__(group, game, owner, offset)
-    
-    def point(self):
-        mouse_pos = self.game.mouse_pos
-        if mouse_pos[1] != self.owner.position.y:
-            rotate_angle = math.degrees(math.atan(((abs(mouse_pos[0] - self.owner.position.x)) / (mouse_pos[1] - self.owner.position.y))))
+    def point(self, toward=Vector()):
+        dir = toward - self.owner.position
+        if dir[1] != 0:
+            rotate_angle = math.degrees(math.atan(abs(dir[0]) / dir[1]))
         else:
             rotate_angle = 90
-        if mouse_pos[1] - self.owner.position.y < 0:
+
+        if dir[1] < 0:
             rotate_angle += 180
         rotate_angle -= 90
+
         self.image, self.rect = rot_center(self.default_image, rotate_angle, self.rect.centerx, self.rect.centery)
         if self.owner.facing == 'left':
             self.flip = -1
@@ -56,6 +45,19 @@ class PlayerGun(Gun):
     def shoot(self, dir):
         pass
 
+    def update(self, dt):
+        self.point()
+
+class PlayerGun(Gun):
+    def __init__(self, group, game, owner, offset=Vector(0, 0)):
+        super().__init__(group, game, owner, offset)
+    
+    def point(self):
+        super().point(self.game.mouse_pos)
+    
+    def shoot(self, dir):
+        pass
+
 
 class EnemyGun(Gun):
 
@@ -64,21 +66,7 @@ class EnemyGun(Gun):
 
 
     def point(self):
-        if self.game.player.position[1] != self.owner.position.y:
-            rotate_angle = math.degrees(math.atan(((abs(self.game.player.position[0] - self.owner.position.x)) / (self.game.player.position[1] - self.owner.position.y))))
-        else:
-            rotate_angle = 90
-        if self.game.player.position[1] - self.owner.position.y < 0:
-            rotate_angle += 180
-        rotate_angle -= 90
-        self.image, self.rect = rot_center(self.default_image, rotate_angle, self.rect.centerx, self.rect.centery)
-        if self.owner.facing == 'left':
-            self.flip = -1
-            self.image = pygame.transform.flip(self.image, flip_x=True, flip_y=False)
-        else:
-            self.flip = 1
-        self.rect = ChildRect(self.rect, (self.offset[0] * self.flip, self.offset[1]))
-        self.position = Vector(self.rect.center)
+        super().point(self.game.player.position)
     
     def shoot(self):
         pass
