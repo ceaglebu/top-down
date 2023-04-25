@@ -90,7 +90,7 @@ class Enemy(MovingObject):
 
     def slowmo_before_death(self, time, on_death):
         self.game.start_bullet_time(time)
-        self.game.timers.append(EventTimer(time, on_death, self))
+        self.game.timers.append(EventTimer(time / 4, on_death, self))
 
     def die(self):
         def death_explosion(self):
@@ -110,7 +110,7 @@ class Enemy(MovingObject):
         self.is_alive = False
 
         self.red_highlight()
-        self.slowmo_before_death(200, death_explosion)
+        self.slowmo_before_death(700, death_explosion)
 
     def update(self, dt):
         if self.is_alive:
