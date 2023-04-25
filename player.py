@@ -113,15 +113,18 @@ class Player(MovingObject):
         if self.movement_control.magnitude() != 0:
             self.phys_velocity += self.movement_control.normalize() * ROLL_STRENGTH
 
+    def take_recoil(self):
+        self.phys_velocity += RECOIL_STRENGTH * \
+            (self.position - self.game.mouse_pos).normalize()
+
     def shoot(self, dt):
         # Create bullet
         dir = self.game.mouse_pos - self.position
         self.gun.shoot(dir)
 
         # Handle recoil
-        self.phys_velocity += RECOIL_STRENGTH * \
-            (self.position - self.game.mouse_pos).normalize()
-
+        self.take_recoil()
+        
         # Handle reload
         self.reload = False
 
