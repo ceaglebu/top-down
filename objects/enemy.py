@@ -29,7 +29,7 @@ class Enemy(MovingObject):
         self.is_alive = True
 
         self.gun = EnemyGun(
-            self.game.layers['accessories'],  game, owner=self, offset=(20, 15))
+            BULLET_SPEED['enemy_test'], self.game.layers['accessories'],  game, owner=self, offset=(20, 15))
         self.can_act = True
         self.can_attack = False
 
@@ -88,8 +88,8 @@ class Enemy(MovingObject):
             0, 0, 0, 0), setcolor=(255, 0, 0, 50)), (0, 0))
 
     def slowmo_before_death(self, time, on_death):
-        self.game.start_bullet_time(time)
-        self.game.timers.append(EventTimer(time / 4, on_death, self))
+        self.game.start_bullet_time(50)
+        self.game.timers.append(EventTimer(50, on_death, self))
 
     def die(self):
         def death_explosion(self):

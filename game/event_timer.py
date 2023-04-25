@@ -10,14 +10,15 @@ class Timer:
     def activate(self):
         self.active = True
         self.start_time = pygame.time.get_ticks()
+        self.curr_time = self.start_time
 
     def deactivate(self):
         self.active = False
         self.start_time = 0
     
-    def update(self):
-        curr_time = pygame.time.get_ticks()
-        if self.active and curr_time - self.start_time >= self.time:
+    def update(self, dt):
+        self.curr_time += dt * 1000
+        if self.active and self.curr_time - self.start_time >= self.time:
             self.deactivate()
             return False
         else:

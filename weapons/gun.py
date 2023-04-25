@@ -9,10 +9,11 @@ from weapons.bullet import Bullet
 
 class Gun(GameObject):
 
-    def __init__(self, group, game, owner, offset = Vector(0,0)):
+    def __init__(self, bullet_speed, group, game, owner, offset = Vector(0,0)):
         default_image = pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'shotgun.png')), .5).convert_alpha()
         super().__init__(group, game, default_image, start_pos=Vector(default_image.get_rect().center))
         
+        self.bullet_speed = bullet_speed
         self.owner = owner
         self.offset = offset
         self.rect = ChildRect(self.image.get_rect(), offset)
@@ -48,14 +49,14 @@ class Gun(GameObject):
     def shoot(self, dir):
         # Create bullet
         Bullet(self.game.layers['bullets'], self.game, self,
-               self.get_endpoint(), snorm(dir, BULLET_SPEED))
+               self.get_endpoint(), snorm(dir, self.bullet_speed))
 
     def update(self, dt):
         self.point()
 
 class PlayerGun(Gun):
-    def __init__(self, group, game, owner, offset=Vector(0, 0)):
-        super().__init__(group, game, owner, offset)
+    def __init__(self, bullet_speed, group, game, owner, offset=Vector(0, 0)):
+        super().__init__(bullet_speed, group, game, owner, offset)
     
     def point(self):
         super().point(self.game.mouse_pos)
@@ -76,8 +77,8 @@ class PlayerGun(Gun):
 
 class EnemyGun(Gun):
 
-    def __init__(self, group, game, owner, offset=Vector(0, 0)):
-        super().__init__(group, game, owner, offset)
+    def __init__(self, bullet_speed, group, game, owner, offset=Vector(0, 0)):
+        super().__init__(bullet_speed, group, game, owner, offset)
 
 
     def point(self):

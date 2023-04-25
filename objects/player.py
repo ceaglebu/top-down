@@ -40,7 +40,7 @@ class Player(MovingObject):
                                                      recallable=True)
 
         self.gun = PlayerGun(
-            self.game.layers['accessories'], self.game, self, (20, 20))
+            BULLET_SPEED['player_test'], self.game.layers['accessories'], self.game, self, (20, 20))
 
         # State
         self.is_rolling = False
@@ -111,9 +111,17 @@ class Player(MovingObject):
         if self.movement_control.magnitude() != 0:
             self.phys_velocity += self.movement_control.normalize() * ROLL_STRENGTH
 
+    def hit(self, dir):
+        is_hit = not self.is_rolling
+        if is_hit:
+            self.take_knockback(dir)
+        return is_hit
+
+    def take_knockback(self, dir):
+        self.phys_velocity += PLAYER_KNOCKBACK_STRENGTH * dir.normalize()
+
     def take_recoil(self, dir):
-        self.phys_velocity += RECOIL_STRENGTH * \
-            dir.normalize()
+        self.phys_velocity += RECOIL_STRENGTH * dir.normalize()
 
     def shoot(self, dt):
         # Create bullet

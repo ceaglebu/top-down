@@ -41,8 +41,8 @@ class Bullet(MovingObject):
         self.kill()
     
     def on_player_collide(self):
-        self.game.player.take_recoil(self.velocity)
-        self.kill()
+        if self.game.player.hit(self.velocity):
+            self.kill()
     
     def is_overlapping(self, object):
         object_mask = pygame.mask.from_surface(object.image)
@@ -65,11 +65,6 @@ class Bullet(MovingObject):
         else:
             if self.is_overlapping(self.game.player):
                 self.on_player_collide()
-
-
-
-        
-
     
     def move(self, dt):
         self.velocity += self.phys_acceleration * dt

@@ -74,7 +74,6 @@ class Game:
                     run = False
                     restart = True
 
-
             self.screen.fill((50,50,50))
             
             for layer in self.layers.values():
@@ -86,7 +85,7 @@ class Game:
             
             delete_timers = []
             for timer in self.timers:
-                if not timer.update():
+                if not timer.update(dt):
                     delete_timers.append(timer)
             for timer in delete_timers:
                 self.timers.remove(timer)
@@ -109,7 +108,7 @@ class Game:
     def start_bullet_time(self, length = -1):
         self.bullet_time = True
         if length != -1:
-            self.timers.append(EventTimer(length * BULLET_TIME_FACTOR, self.end_bullet_time))
+            self.timers.append(EventTimer(length, self.end_bullet_time))
         pass
 
     def end_bullet_time(self):
