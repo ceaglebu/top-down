@@ -7,11 +7,11 @@ from load_sprites import get_image, get_animation
 from particle import ParticleSpawner
 
 class Bullet(MovingObject):
-    def __init__(self, group, game, owner, pos, velo, accel = Vector()):
+    def __init__(self, group, game, gun, pos, velo, accel = Vector()):
         image = get_image(pygame.image.load(os.path.join('assets', 'misc', 'bullet.png')).convert_alpha(), ANIMATION_TILESIZE, (8,25), 3, (0,2), (12,6)).convert_alpha()
         super().__init__(group, game, image, start_pos=pos, start_velocity=velo, start_acceleration=accel)
 
-        self.owner = owner
+        self.gun = gun
         
         # self.image.set_colorkey((0,0,0))
         # self.image = pygame.Surface(BULLET_SIZE)
@@ -39,6 +39,15 @@ class Bullet(MovingObject):
                                 time_range=(.2,1), 
                                 angle_range = (0,360))
         self.kill()
+    
+    def on_player_collide(self):
+        self.game.player.take_recoil()
+        self.kill()
+    
+    def is_overlapping(self, object):
+        object_mask = pygame.mask.from_surface(object.image)
+        overlap = object_mask.overlap_mask(self.collision_mask, (self.rect.centerx - object.rect.centerx, self.rect.centery - object.rect.centery))
+        return overlap.count() > 0
 
     def handle_collision(self):
         self.collision_mask = pygame.mask.from_surface(self.image)
@@ -46,16 +55,21 @@ class Bullet(MovingObject):
         if off_screen:
             self.kill()
         for tile in self.game.layers['tiles']:
-            tile_mask = pygame.mask.from_surface(tile.image)
-            overlap = tile_mask.overlap_mask(self.collision_mask, (self.rect.centerx - tile.rect.centerx, self.rect.centery - tile.rect.centery))
-            if overlap.count() > 0:
+            if self.is_overlapping(tile):
                 self.on_tile_collide(tile)
 
-        for enemy in self.game.layers['enemies']:
-            tile_mask = pygame.mask.from_surface(tile.image)
-            overlap = tile_mask.overlap_mask(self.collision_mask, (self.rect.centerx - enemy.rect.centerx, self.rect.centery - enemy.rect.centery))
-            if overlap.count() > 0:
-                self.on_enemy_collide(enemy)
+        if self.gun.owner is self.game.player:
+            for enemy in self.game.layers['enemies']:
+                if self.is_overlapping(enemy):
+                    self.on_enemy_collide(enemy)
+        else:
+            if self.is_overlapping(self.game.player):
+                self.on_player_collide()
+
+
+
+        
+
     
     def move(self, dt):
         self.velocity += self.phys_acceleration * dt
