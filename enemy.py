@@ -1,4 +1,4 @@
-from bullet import Bullet
+from animation import AnimationData
 from event_timer import EventTimer
 from gun import EnemyGun
 from load_sprites import get_animation
@@ -19,14 +19,15 @@ class Enemy(MovingObject):
 
         animations = {
             'idle': get_animation(sprite_sheet, ANIMATION_TILESIZE, (11, 16), PLAYER_SCALE, 1, 0, 4, (11, 12)),
-            'run': get_animation(sprite_sheet, ANIMATION_TILESIZE, (11, 16), PLAYER_SCALE, 6, 3, 5, (11, 12)),
-            'attack': get_animation(sprite_sheet, ANIMATION_TILESIZE, (11, 16), PLAYER_SCALE, 2, 0, 8, (11, 12))
+            'attack': get_animation(sprite_sheet, ANIMATION_TILESIZE, (11, 16), PLAYER_SCALE, 6, 3, 5, (11, 12)),
+            'run': get_animation(sprite_sheet, ANIMATION_TILESIZE, (11, 16), PLAYER_SCALE, 2, 0, 8, (11, 12))
         }
+        animation_data = AnimationData(animations, animations['idle'])
 
-        super().__init__(group, game, animations, animations['idle'])
+        super().__init__(group, game, animations['idle'][0], animation_data)
 
         self.health = 100
-        self.alive = True
+        self.is_alive = True
 
         self.gun = EnemyGun(
             self.game.layers['accessories'],  game, owner=self, offset=(20, 15))
@@ -64,17 +65,17 @@ class Enemy(MovingObject):
         self.gun.rect.center = self.position + self.gun.rect.offset
 
     def take_damage(self, damage):
-        self.health -= damage
-        if self.health <= 0:
-            self.die()
+        if self.is_alive:
+            self.health -= damage
+            if self.health <= 0:
+                self.die()
 
     def reset_attack(self):
         self.can_attack = True
 
     def attack(self):
-        dir = (self.game.player.position - self.position).normalize()
-        Bullet(self, self.game.layers['bullets'],
-               self.gun.get_endpoint(), dir * BULLET_SPEED)
+        dir = self.game.player.position - self.position
+        self.gun.shoot(dir)
 
         # Handle reload
         self.can_attack = False
@@ -106,11 +107,11 @@ class Enemy(MovingObject):
             self.gun.kill()
             self.kill()
             self.game.camera.shake(intensity=ENEMY_DIES_SHAKE_INTENSITY)
-        self.alive = False
+        self.is_alive = False
 
         self.red_highlight()
         self.slowmo_before_death(200, death_explosion)
 
     def update(self, dt):
-        if self.alive:
+        if self.is_alive:
             super().update(dt)

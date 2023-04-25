@@ -1,8 +1,11 @@
+from bullet import Bullet
+from particle import ParticleSpawner
 import pygame,os,math
 from child_rect import ChildRect
 from pygame.math import Vector2 as Vector
 from game_object import GameObject
-from utils import rot_center
+from settings import BULLET_SPEED
+from utils import rot_center, snorm
 
 class Gun(GameObject):
 
@@ -43,7 +46,9 @@ class Gun(GameObject):
         self.position = Vector(self.rect.center)
     
     def shoot(self, dir):
-        pass
+        # Create bullet
+        Bullet(self.game.layers['bullets'], self.game, self,
+               self.get_endpoint(), snorm(dir, BULLET_SPEED))
 
     def update(self, dt):
         self.point()
@@ -56,7 +61,17 @@ class PlayerGun(Gun):
         super().point(self.game.mouse_pos)
     
     def shoot(self, dir):
-        pass
+        super().shoot(dir)
+        ParticleSpawner(group=self.game.layers['particles'],
+                        position=self.get_endpoint(),
+                        position_radius=5,
+                        count=3,
+                        color='yellow',
+                        size_range=(1, 10),
+                        velocity_range=(200, 1500),
+                        acceleration_strength_range=(5, 15),
+                        time_range=(.2, 1),
+                        angle_range=(self.angle - 30, self.angle + 30))
 
 
 class EnemyGun(Gun):
@@ -67,7 +82,4 @@ class EnemyGun(Gun):
 
     def point(self):
         super().point(self.game.player.position)
-    
-    def shoot(self):
-        pass
 

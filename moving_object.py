@@ -4,35 +4,30 @@ from settings import *
 from event_timer import EventTimer, Timer
 from load_sprites import get_animation
 from child_rect import ChildRect
-from bullet import Bullet
-from gun import Gun
 from particle import *
 from abc import ABC, abstractmethod
 from game_object import GameObject
 
 class MovingObject(GameObject):
 
-    def __init__(self, group, game, animations, active_animation, start_pos=Vector(WIN_WIDTH / 2, WIN_HEIGHT / 2)):
+    def __init__(self, group, game, default_image, animation_data=None, start_pos=Vector(WIN_WIDTH / 2, WIN_HEIGHT / 2), start_velocity=Vector(), start_physics_velocity=Vector(), start_acceleration=Vector(), start_phys_acceleration=Vector()):
         # Initialize
-        super().__init__(group, game, active_animation[0], start_pos=start_pos)
+        super().__init__(group, game, default_image, start_pos=start_pos)
         self.game = game
         self.screen = pygame.display.get_surface()
         self.child_rects = []
         self.child_sprites = pygame.sprite.Group()
 
         # Movement vectors
-        self.velocity = Vector()
-        self.phys_velocity = Vector() # Physics are independent of player movement
-        self.phys_acceleration = Vector()
+        self.velocity = start_velocity
+        self.acceleration = start_acceleration
+        self.phys_velocity = start_physics_velocity # Physics are independent of player movement
+        self.phys_acceleration = start_phys_acceleration
 
         # Animation
-        self.start_time = pygame.time.get_ticks()
-        self.animations = animations
-        self.active_animation = active_animation
-        self.anim_frame = 0
+        self.animation = animation_data
+        self.is_animated = animation_data is not None
         self.facing = 'right'
-        self.image = self.active_animation[self.anim_frame]
-        self.rect = self.image.get_rect()
         self.rect.center = ((0, 0))
 
         # Sprite
@@ -44,19 +39,20 @@ class MovingObject(GameObject):
 
     def think(self, dt):
         raise NameError('think was not implemented!!')
+    
+    def get_animation_by_key(self, key):
+        return self.animation.animations[key]
 
     
-    def set_animation(self, animation):
-        if self.active_animation != animation:
-            self.active_animation = animation
-            self.start_time = pygame.time.get_ticks()
+    def set_animation(self, key):
+        self.animation.active_animation = self.get_animation_by_key(key)
+        self.animation.start_time = pygame.time.get_ticks()
 
     def handle_animation(self, dt):
-        self.anim_frame = int(((pygame.time.get_ticks() - self.start_time) // (1000 / ANIMATION_FRAMERATE)) % len(self.active_animation))
-        self.image = self.active_animation[self.anim_frame]
+        self.animation.frame = int(((pygame.time.get_ticks() - self.animation.start_time) // (1000 / ANIMATION_FRAMERATE)) % len(self.animation.active_animation))
+        self.image = self.animation.active_animation[self.animation.frame]
         if self.facing == 'left':
             self.image = pygame.transform.flip(self.image, True, False).convert_alpha()
-        pass
         
     def move(self, dt):
         self.phys_acceleration = self.phys_velocity * -FRICTION_STRENGTH
@@ -70,6 +66,7 @@ class MovingObject(GameObject):
             self.velocity = self.movement_control + self.phys_velocity 
         self.position += self.velocity * dt
 
+    def handle_collision(self):
         x_collide = self.handle_x_collision()
         y_collide = self.handle_y_collision()
         return (x_collide, y_collide)
@@ -145,8 +142,10 @@ class MovingObject(GameObject):
 
     def update(self, dt):
         self.think(dt)
-        self.handle_animation(dt)
-        collide = self.move(dt)
+        if self.is_animated:
+            self.handle_animation(dt)
+        self.move(dt)
+        collide = self.handle_collision()
         self.post_collision(dt, collide)
 
         for timer in self.timers:

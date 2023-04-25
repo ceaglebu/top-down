@@ -8,5 +8,8 @@ def rot_center(image, angle, x, y):
 
     return rotated_image, new_rect
 
-def normalize(vector, speed):
-    return Vector() if vector.magnitude() == 0 else vector.normalize() * speed
+def snorm(vector, speed):
+    if (vector.magnitude() == 0):
+        return Vector()
+    else:
+        return vector.normalize() * speed

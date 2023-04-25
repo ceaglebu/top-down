@@ -1,3 +1,4 @@
+from animation import AnimationData
 import pygame
 import sys
 import os
@@ -24,7 +25,8 @@ class Player(MovingObject):
             'roll': get_animation(sprite_sheet, ANIMATION_TILESIZE, (11, 16), PLAYER_SCALE, 6, 3, 5, (11, 12)),
             'run': get_animation(sprite_sheet, ANIMATION_TILESIZE, (11, 16), PLAYER_SCALE, 2, 0, 8, (11, 12))
         }
-        super().__init__(group, game, animations, animations['idle'])
+        animation_data = AnimationData(animations, animations['idle'])
+        super().__init__(group, game, animations['idle'][0], animation_data)
 
         self.roll_particle_spawner = ParticleSpawner(group=self.game.layers['player-particles'],
                                                      position=(0, 0),
@@ -79,8 +81,8 @@ class Player(MovingObject):
         self.is_rolling = False
         self.collision_rect.height = self.rect.height * COLLISION_FORGIVENESS
         self.collision_rect.offset.y = self.collision_rect.default_offset.y
-        if self.active_animation == self.animations['roll']:
-            self.set_animation(self.animations['idle'])
+        if self.animation.active_animation == self.get_animation_by_key('roll'):
+            self.set_animation('idle')
 
     def start_roll_particles(self):
         def spawn_roll_particles(self):
@@ -99,7 +101,7 @@ class Player(MovingObject):
         self.collision_rect.height *= 3 / 4
         self.collision_rect.offset.y = int(
             (self.rect.bottom - self.collision_rect.bottom) * COLLISION_FORGIVENESS)
-        self.set_animation(self.animations['roll'])
+        self.set_animation('roll')
         self.start_roll_particles()
 
         self.game.timers.append(EventTimer(
@@ -113,19 +115,8 @@ class Player(MovingObject):
 
     def shoot(self, dt):
         # Create bullet
-        dir = (self.game.mouse_pos - self.position).normalize()
-        Bullet(self, self.game.layers['bullets'],
-               self.gun.get_endpoint(), dir * BULLET_SPEED)
-        ParticleSpawner(group=self.game.layers['particles'],
-                        position=self.gun.get_endpoint(),
-                        position_radius=5,
-                        count=3,
-                        color='yellow',
-                        size_range=(1, 10),
-                        velocity_range=(200, 1500),
-                        acceleration_strength_range=(5, 15),
-                        time_range=(.2, 1),
-                        angle_range=(self.gun.angle - 30, self.gun.angle + 30))
+        dir = self.game.mouse_pos - self.position
+        self.gun.shoot(dir)
 
         # Handle recoil
         self.phys_velocity += RECOIL_STRENGTH * \
@@ -161,8 +152,8 @@ class Player(MovingObject):
     def post_collision(self, dt, collision):
         (x_collision, y_collision) = collision
         if self.velocity.magnitude() == 0 or (not self.is_rolling and ((x_collision and self.movement_control.x != 0 and self.movement_control.y == 0) or (y_collision and self.movement_control.y != 0 and self.movement_control.x == 0))):
-            self.set_animation(self.animations['idle'])
+            self.set_animation('idle')
         elif not self.is_rolling and self.movement_control.magnitude() > 10:
-            self.set_animation(self.animations['run'])
+            self.set_animation('run')
 
         self.gun.rect.center = self.position + self.gun.rect.offset
