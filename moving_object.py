@@ -7,19 +7,20 @@ from child_rect import ChildRect
 from bullet import Bullet
 from gun import Gun
 from particle import *
+from abc import ABC, abstractmethod
+from game_object import GameObject
 
-class MovingObject(pygame.sprite.Sprite):
+class MovingObject(GameObject):
 
     def __init__(self, group, game, animations, active_animation, start_pos=Vector(WIN_WIDTH / 2, WIN_HEIGHT / 2)):
         # Initialize
-        super().__init__(group)
+        super().__init__(group, game, active_animation[0], start_pos=start_pos)
         self.game = game
         self.screen = pygame.display.get_surface()
         self.child_rects = []
         self.child_sprites = pygame.sprite.Group()
 
         # Movement vectors
-        self.position = start_pos
         self.velocity = Vector()
         self.phys_velocity = Vector() # Physics are independent of player movement
         self.phys_acceleration = Vector()
@@ -41,9 +42,8 @@ class MovingObject(pygame.sprite.Sprite):
         self.timers = []
         self.movement_control = Vector()
 
-
     def think(self, dt):
-        pass
+        raise NameError('think was not implemented!!')
 
     
     def set_animation(self, animation):
@@ -145,9 +145,8 @@ class MovingObject(pygame.sprite.Sprite):
 
     def update(self, dt):
         self.think(dt)
-        self.handle_animation()
+        self.handle_animation(dt)
         collide = self.move(dt)
-
         self.post_collision(dt, collide)
 
         for timer in self.timers:
