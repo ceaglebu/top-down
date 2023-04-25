@@ -1,9 +1,9 @@
 import pygame
-from particle import Particle
+from objects.particle import Particle
 from pygame.math import Vector2 as Vector
-from settings import *
+from game.settings import *
 import random as rand
-from event_timer import EventTimer
+from game.event_timer import EventTimer
 
 class SpriteGroup3d(pygame.sprite.Group):
     def __init__(self, z):

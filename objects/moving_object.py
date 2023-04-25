@@ -1,12 +1,12 @@
 import pygame,sys,os
 from pygame.math import Vector2 as Vector
-from settings import *
-from event_timer import EventTimer, Timer
-from load_sprites import get_animation
-from child_rect import ChildRect
-from particle import *
+from game.settings import *
+from game.event_timer import EventTimer, Timer
+from utils.load_sprites import get_animation
+from .child_rect import ChildRect
+from .particle import *
 from abc import ABC, abstractmethod
-from game_object import GameObject
+from .game_object import GameObject
 
 class MovingObject(GameObject):
 

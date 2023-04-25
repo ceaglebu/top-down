@@ -1,10 +1,10 @@
-from moving_object import MovingObject
+from objects.moving_object import MovingObject
 import pygame,os,math
 from pygame.math import Vector2 as Vector
-from settings import *
-from child_rect import ChildRect
-from load_sprites import get_image, get_animation
-from particle import ParticleSpawner
+from game.settings import *
+from objects.child_rect import ChildRect
+from utils.load_sprites import get_image, get_animation
+from objects.particle import ParticleSpawner
 
 class Bullet(MovingObject):
     def __init__(self, group, game, gun, pos, velo, accel = Vector()):
@@ -41,7 +41,7 @@ class Bullet(MovingObject):
         self.kill()
     
     def on_player_collide(self):
-        self.game.player.take_recoil()
+        self.game.player.take_recoil(self.velocity)
         self.kill()
     
     def is_overlapping(self, object):

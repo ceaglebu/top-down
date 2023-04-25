@@ -1,16 +1,14 @@
-from animation import AnimationData
+from utils.animation import AnimationData
 import pygame
 import sys
 import os
 from pygame.math import Vector2 as Vector
-from settings import *
-from event_timer import EventTimer, Timer
-from load_sprites import get_animation
-from child_rect import ChildRect
-from bullet import Bullet
-from gun import PlayerGun
-from particle import *
-from moving_object import MovingObject
+from game.settings import *
+from game.event_timer import EventTimer, Timer
+from utils.load_sprites import get_animation
+from weapons.gun import PlayerGun
+from .particle import *
+from .moving_object import MovingObject
 
 
 class Player(MovingObject):
@@ -113,9 +111,9 @@ class Player(MovingObject):
         if self.movement_control.magnitude() != 0:
             self.phys_velocity += self.movement_control.normalize() * ROLL_STRENGTH
 
-    def take_recoil(self):
+    def take_recoil(self, dir):
         self.phys_velocity += RECOIL_STRENGTH * \
-            (self.position - self.game.mouse_pos).normalize()
+            dir.normalize()
 
     def shoot(self, dt):
         # Create bullet
@@ -123,8 +121,8 @@ class Player(MovingObject):
         self.gun.shoot(dir)
 
         # Handle recoil
-        self.take_recoil()
-        
+        self.take_recoil(self.position - self.game.mouse_pos)
+
         # Handle reload
         self.reload = False
 

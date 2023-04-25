@@ -1,14 +1,13 @@
-from animation import AnimationData
-from event_timer import EventTimer
-from gun import EnemyGun
-from load_sprites import get_animation
-from settings import *
+from utils.animation import AnimationData
+from game.event_timer import EventTimer
+from weapons.gun import EnemyGun
+from utils.load_sprites import get_animation
+from game.settings import *
 import os
 import pygame
 from pygame.math import Vector2 as Vector
-from child_rect import ChildRect
-from particle import *
-from moving_object import MovingObject
+from .particle import *
+from .moving_object import MovingObject
 
 
 class Enemy(MovingObject):

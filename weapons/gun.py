@@ -1,11 +1,11 @@
-from bullet import Bullet
-from particle import ParticleSpawner
+from objects.particle import ParticleSpawner
 import pygame,os,math
-from child_rect import ChildRect
+from objects.child_rect import ChildRect
 from pygame.math import Vector2 as Vector
-from game_object import GameObject
-from settings import BULLET_SPEED
-from utils import rot_center, snorm
+from objects.game_object import GameObject
+from game.settings import BULLET_SPEED
+from utils.math import rot_center, snorm
+from weapons.bullet import Bullet
 
 class Gun(GameObject):
 

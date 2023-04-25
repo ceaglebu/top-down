@@ -1,10 +1,10 @@
-from enemy import Enemy
+from objects.enemy import Enemy
 import pygame, sys,os
-from settings import *
-from player import Player
-from particle import * 
-from camera import SpriteGroup3d, CameraGroup
-from event_timer import EventTimer
+from game.settings import *
+from objects.player import Player
+from objects.particle import * 
+from game.camera import SpriteGroup3d, CameraGroup
+from game.event_timer import EventTimer
 
 
 class Tile(pygame.sprite.Sprite):
