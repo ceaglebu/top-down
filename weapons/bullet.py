@@ -16,7 +16,10 @@ class Bullet(MovingObject):
         # self.image.set_colorkey((0,0,0))
         # self.image = pygame.Surface(BULLET_SIZE)
         # self.image.fill('yellow')
-        rotate_angle = math.degrees(math.atan(velo[0]/velo[1]))
+        if velo[1] != 0:
+            rotate_angle = math.degrees(math.atan(velo[0]/velo[1]))
+        else:
+            rotate_angle = 0
         if velo[1] > 0:
             rotate_angle += 180
         self.image = pygame.transform.rotate(self.image, rotate_angle)

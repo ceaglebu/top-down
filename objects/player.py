@@ -77,8 +77,8 @@ class Player(MovingObject):
 
     def end_roll(self):
         self.is_rolling = False
-        self.collision_rect.height = self.rect.height * COLLISION_FORGIVENESS
-        self.collision_rect.offset.y = self.collision_rect.default_offset.y
+        # self.collision_rect.height = self.rect.height * COLLISION_FORGIVENESS
+        # self.collision_rect.offset.y = self.collision_rect.default_offset.y
         if self.animation.active_animation == self.get_animation_by_key('roll'):
             self.set_animation('idle')
 
@@ -96,9 +96,9 @@ class Player(MovingObject):
     def start_roll(self, dt):
         self.is_rolling = True
         self.can_roll = False
-        self.collision_rect.height *= 3 / 4
-        self.collision_rect.offset.y = int(
-            (self.rect.bottom - self.collision_rect.bottom) * COLLISION_FORGIVENESS)
+        # self.collision_rect.height *= 3 / 4
+        # self.collision_rect.offset.y = int(
+        #     (self.rect.bottom - self.collision_rect.bottom) * COLLISION_FORGIVENESS)
         self.set_animation('roll')
         self.start_roll_particles()
 
