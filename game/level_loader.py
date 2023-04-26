@@ -64,7 +64,6 @@ class Level():
             for x, column in enumerate(row):
                 mask = '0,0,0,0,0,0,0,0,0'
                 if column == 'X':
-                    print("ground")
                     self.tiles[y][x] = 1
                     Tile(self.walls, self.game, (x, y), self.tileset[
                         '0,0,0,0,1,0,0,0,0'

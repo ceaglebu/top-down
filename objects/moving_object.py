@@ -89,7 +89,7 @@ class MovingObject(GameObject):
         # Check for object collisions
         x_collision = False
         for tile in self.game.layers['tiles']:
-            if pygame.Rect.colliderect(tile.rect, self.collision_rect):
+            if x_collision == False and pygame.Rect.colliderect(tile.rect, self.collision_rect):
                 x_collision = True
                 if self.phys_velocity.x * self.velocity.x > 0:
                     self.phys_velocity.x = self.phys_velocity.x * .5
@@ -120,7 +120,7 @@ class MovingObject(GameObject):
 
         y_collision = False
         for tile in self.game.layers['tiles']:
-            if pygame.Rect.colliderect(tile.rect, self.collision_rect):
+            if y_collision == False and pygame.Rect.colliderect(tile.rect, self.collision_rect):
                 y_collision = True
                 if self.phys_velocity.y * self.velocity.y > 0:
                     self.phys_velocity.y = self.phys_velocity.y * .5
