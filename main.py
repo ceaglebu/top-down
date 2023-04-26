@@ -7,12 +7,6 @@ from game.camera import SpriteGroup3d, CameraGroup
 from game.event_timer import EventTimer
 from game.level_loader import LevelLoader
 
-
-class Tile(pygame.sprite.Sprite):
-    def __init__(self, group):
-        super().__init__(group)
-        self.position = (0,0)
-
 class Game:
 
     def __init__(self):
@@ -40,12 +34,6 @@ class Game:
         self.bullet_time = False
 
         self.level_loader = LevelLoader(self)
-        tile = Tile(self.layers['tiles'])
-        tile.image = pygame.Surface((50,50))
-        tile.image.fill('black')
-        tile.rect = tile.image.get_rect()
-        tile.rect.center = (100, 200)
-        tile.position = tile.rect.center
 
         enemy = Enemy(self.layers['enemies'], self)
         enemy.position = pygame.math.Vector2((WIN_WIDTH / 3, WIN_HEIGHT / 3))

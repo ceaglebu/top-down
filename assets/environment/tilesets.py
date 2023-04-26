@@ -52,7 +52,7 @@ TILESETS = {
         '0,0,0,1,1,1,0,1,0':  get_image(SPRITESHEETS['dungeon-wall'], (32,32), (32,32), TILE_SIZE/32, (2,5)),
         '0,1,0,1,1,0,0,1,0':  get_image(SPRITESHEETS['dungeon-wall'], (32,32), (32,32), TILE_SIZE/32, (4,3)),
         '0,1,0,1,1,1,0,0,0':  get_image(SPRITESHEETS['dungeon-wall'], (32,32), (32,32), TILE_SIZE/32, (4,1)),
-        '0,1,0,0,1,1,0,0,0':  get_image(SPRITESHEETS['dungeon-wall'], (32,32), (32,32), TILE_SIZE/32, (4,4)),
+        '0,1,0,0,1,1,0,1,0':  get_image(SPRITESHEETS['dungeon-wall'], (32,32), (32,32), TILE_SIZE/32, (4,4)),
         
         # 2 surrounding ground
         '0,0,0,1,1,0,0,1,0':  get_image(SPRITESHEETS['dungeon-wall'], (32,32), (32,32), TILE_SIZE/32, (2,3)),

@@ -6,6 +6,8 @@ from game.settings import *
 from pygame.math import Vector2 as Vector
 from objects.game_object import GameObject
 
+COLLIDABLE = ['X']
+
 # Handle changes in level
 class LevelLoader():
     def __init__(self, game):
@@ -62,15 +64,34 @@ class Level():
 
         for y, row in enumerate(self.tile_types):
             for x, column in enumerate(row):
-                mask = '0,0,0,0,0,0,0,0,0'
                 if column == 'X':
                     self.tiles[y][x] = 1
+                    mask = [0,0,0,0,1,0,0,0,0]
+                    if x != 0 and self.tile_types[y][x-1] in COLLIDABLE:
+                        mask[3] = 1
+                    if x != len(self.tile_types[0]) - 1 and self.tile_types[y][x + 1] in COLLIDABLE:
+                        mask[5] = 1
+                    if y != 0 and self.tile_types[y-1][x] in COLLIDABLE:
+                        mask[1] = 1
+                    if y!= len(self.tile_types) - 1 and self.tile_types[y+1][x] in COLLIDABLE:
+                        mask[7] = 1
+                        
                     Tile(self.walls, self.game, (x, y), self.tileset[
-                        '0,0,0,0,1,0,0,0,0'
+                        ','.join(str(m) for m in mask)
                     ])
                 else:
+                    mask = [0,0,0,0,0,0,0,0,0]
+                    if x != 0 and self.tile_types[y][x-1] in COLLIDABLE:
+                        mask[3] = 1
+                    if x != len(self.tile_types[0]) - 1 and self.tile_types[y][x + 1] in COLLIDABLE:
+                        mask[5] = 1
+                    if y != 0 and self.tile_types[y-1][x] in COLLIDABLE:
+                        mask[1] = 1
+                    if y!= len(self.tile_types) - 1 and self.tile_types[y+1][x] in COLLIDABLE:
+                        mask[7] = 1
+
                     Tile(self.ground, self.game, (x, y), self.tileset[
-                        '0,0,0,0,0,0,0,0,0'
+                        ','.join(str(m) for m in mask)
                     ])
 
 # Object being displayed on screen/interacted with by gameobjects
