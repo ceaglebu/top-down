@@ -45,8 +45,9 @@ class MovingObject(GameObject):
 
     
     def set_animation(self, key):
-        self.animation.active_animation = self.get_animation_by_key(key)
-        self.animation.start_time = pygame.time.get_ticks()
+        if self.animation.active_animation != self.get_animation_by_key(key):
+            self.animation.active_animation = self.get_animation_by_key(key)
+            self.animation.start_time = pygame.time.get_ticks()
 
     def handle_animation(self, dt):
         self.animation.frame = int(((pygame.time.get_ticks() - self.animation.start_time) // (1000 / ANIMATION_FRAMERATE)) % len(self.animation.active_animation))

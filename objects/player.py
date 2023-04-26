@@ -110,6 +110,7 @@ class Player(MovingObject):
         is_hit = not self.is_rolling
         if is_hit:
             self.take_knockback(dir)
+            self.game.camera.shake()
         return is_hit
 
     def take_knockback(self, dir):
