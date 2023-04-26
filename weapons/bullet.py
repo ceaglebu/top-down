@@ -42,6 +42,16 @@ class Bullet(MovingObject):
     
     def on_player_collide(self):
         if self.game.player.hit(self.velocity):
+            ParticleSpawner(group=self.game.layers['particles'], 
+                                position=self.game.player.rect.center, 
+                                position_radius = 6, 
+                                count=5, 
+                                color='red', 
+                                size_range=(5,10), 
+                                velocity_range=(200,300), 
+                                acceleration_strength_range=(8,10), 
+                                time_range=(.2,1), 
+                                angle_range = (0,360))
             self.kill()
     
     def is_overlapping(self, object):

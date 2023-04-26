@@ -9,7 +9,7 @@ def get_image(sheet, gridsize, spritesize, scale, coordinate, offset = (0,0), bg
     image = pygame.transform.scale(image, (spritesize[0] * scale, spritesize[1] * scale))
     image.set_colorkey(bg_color)
 
-    return image
+    return image.convert()
 
 def get_animation(sheet, gridsize, spritesize, scale, y_location, start, length, offset = (0,0), bg_color='black'):
     animation = []
