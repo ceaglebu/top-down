@@ -7,6 +7,7 @@ from pygame.math import Vector2 as Vector
 from objects.game_object import GameObject
 
 COLLIDABLE = ['X']
+GROUND = ['O']
 
 # Handle changes in level
 class LevelLoader():
@@ -47,9 +48,7 @@ class Level():
         self.ground = SpriteGroup3d(self.game.layers['ground'].z)
         
         self.tile_types = [[]]
-        self.tiles = [
-            []
-        ]
+        self.tiles = []
         self.load()
     
     def load(self):
@@ -66,24 +65,15 @@ class Level():
             for x, column in enumerate(row):
                 if column == 'X':
                     self.tiles[y][x] = 1
-                    # mask = [0,0,0,0,1,0,0,0,0]
-                    # if x != 0 and self.tile_types[y][x-1] in COLLIDABLE:
-                    #     mask[3] = 1
-                    # if x != len(self.tile_types[0]) - 1 and self.tile_types[y][x + 1] in COLLIDABLE:
-                    #     mask[5] = 1
-                    # if y != 0 and self.tile_types[y-1][x] in COLLIDABLE:
-                    #     mask[1] = 1
-                    # if y!= len(self.tile_types) - 1 and self.tile_types[y+1][x] in COLLIDABLE:
-                    #     mask[7] = 1
 
                     mask = [0,1,0,1,1,1,0,1,0]
-                    if x != 0 and self.tile_types[y][x-1] == 'O':
+                    if x != 0 and self.tile_types[y][x-1] in GROUND:
                         mask[3] = 0
-                    if x != len(self.tile_types[0]) - 1 and self.tile_types[y][x + 1] == 'O':
+                    if x != len(self.tile_types[0]) - 1 and self.tile_types[y][x + 1] in GROUND:
                         mask[5] = 0
-                    if y != 0 and self.tile_types[y-1][x] == 'O':
+                    if y != 0 and self.tile_types[y-1][x] in GROUND:
                         mask[1] = 0
-                    if y!= len(self.tile_types) - 1 and self.tile_types[y+1][x] == 'O':
+                    if y!= len(self.tile_types) - 1 and self.tile_types[y+1][x] in GROUND:
                         mask[7] = 0
 
                     Tile(self.walls, self.game, (x, y), self.tileset[

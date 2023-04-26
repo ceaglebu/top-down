@@ -11,7 +11,7 @@ from game.settings import *
 class Gun(GameObject):
 
     def __init__(self, bullet_speed, group, game, owner, offset = Vector(0,0)):
-        default_image = pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'shotgun.png')), .5).convert_alpha()
+        default_image = pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'shotgun.png')), .1 * PLAYER_SCALE).convert_alpha()
         super().__init__(group, game, default_image, start_pos=Vector(default_image.get_rect().center))
         
         self.bullet_speed = bullet_speed

@@ -40,7 +40,7 @@ class Player(MovingObject):
                                                      recallable=True)
 
         self.gun = PlayerGun(
-            BULLET_SPEED['player_test'], self.game.layers['accessories'], self.game, self, (20, 20))
+            BULLET_SPEED['player_test'], self.game.layers['accessories'], self.game, self, Vector(4, 4) * PLAYER_SCALE)
 
         # State
         self.is_rolling = False

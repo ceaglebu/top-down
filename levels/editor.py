@@ -1,6 +1,16 @@
 import pygame, sys, os
 from settings import *
 
+#####################################################################
+# EDITOR CONTROLS:                                                  #
+# CTRL + S: save level                                              #
+# CTRL + N: new level                                               #
+# Z/X: Change tile type (tile types are in levels/settings.py)      #
+# CTRL + Arrow Keys: Move all tiles up/down/left/right              #
+#####################################################################
+
+# When making levels, fill ground space with white and make walls with black. The rest will be filled in with background color
+
 class Editor:
     def __init__(self, path):
         self.screen = pygame.display.get_surface()
