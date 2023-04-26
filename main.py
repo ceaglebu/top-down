@@ -65,7 +65,6 @@ class Game:
                     run = False
                     restart = True
 
-            self.screen.fill((50,50,50))
             
             for layer in self.layers.values():
                 layer.update(dt)

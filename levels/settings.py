@@ -15,23 +15,12 @@ PAN_SCROLL_SPEED = 100
 
 TILE_TYPES = [
     ("wall", 'X'),
-    ("magnet", 'E'),
-    ("infrared", 'H'),
-    ("start", 'S') 
+    ("ground", 'O')
 ]
 
 TILE_COLORS = {
     'X': 'black',
-    'E': 'yellow',
-    'H': 'red',
-    'S': 'green'
-}
-
-DIRS = {
-    'north': 0,
-    'east': 1,
-    'south': 2,
-    'west': 3
+    'O': 'white',
 }
 
 

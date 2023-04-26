@@ -46,6 +46,9 @@ class CameraGroup:
             self.game.timers.append(EventTimer(length, end_shake, self))
 
     def draw(self):
+        
+        self.game.screen.fill(BACKGROUND_COLOR)
+        
         # Go through every item and draw it correctly
         layer_list = {}
         for layer in self.game.layers.values():
