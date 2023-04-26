@@ -16,6 +16,7 @@ class Game:
         pygame.mouse.set_cursor(cursor)
         self.screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
         self.clock = pygame.time.Clock()
+        pygame.display.set_caption("Fortnite 4")
         self.timers = []
         
         self.layers = {
@@ -39,6 +40,8 @@ class Game:
         enemy.position = pygame.math.Vector2((WIN_WIDTH / 3, WIN_HEIGHT / 3))
 
         self.player = Player(self.layers['player'], self)
+        icon = pygame.transform.chop(self.player.image, (11,12,11,11))
+        pygame.display.set_icon(icon)
     
     def run(self):
         run = True
