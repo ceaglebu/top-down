@@ -53,8 +53,13 @@ class ParticleGroup():
         return self.particles
 
     def update(self, dt):
+        del_particles = []
         for particle in self.particles:
             particle.update(dt)
+            if particle.size <= 0:
+                del_particles.append(particle)
+        for particle in del_particles:
+            self.particles.remove(particle)
 
     def draw(self, surface):
         for particle in self.particles:
@@ -79,7 +84,7 @@ if __name__ == '__main__':
 
     win = pygame.display.set_mode((1280,720))
 
-    group = ParticleGroup()
+    group = ParticleGroup(1)
     particles = ParticleSpawner(group = group, 
                                 position=(win.get_width() //2, win.get_height() // 2), 
                                 position_radius=10, 

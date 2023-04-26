@@ -7,8 +7,8 @@ class GameObject(pygame.sprite.Sprite):
         self.game = game
         self.default_image = default_image
         self.image = pygame.transform.rotate(self.default_image, 0)
-        self.rect = self.image.get_rect()
         self.position = start_pos
+        self.rect = self.image.get_rect(center = start_pos)
 
         self.angle = angle
         self.flip = flip

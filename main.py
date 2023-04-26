@@ -5,6 +5,7 @@ from objects.player import Player
 from objects.particle import * 
 from game.camera import SpriteGroup3d, CameraGroup
 from game.event_timer import EventTimer
+from game.level_loader import LevelLoader
 
 
 class Tile(pygame.sprite.Sprite):
@@ -24,6 +25,7 @@ class Game:
         self.timers = []
         
         self.layers = {
+            'ground': SpriteGroup3d(-1),
             'tiles': SpriteGroup3d(1),
             'bullets': SpriteGroup3d(2),
             'player-particles': ParticleGroup(3),
@@ -37,6 +39,7 @@ class Game:
         
         self.bullet_time = False
 
+        self.level_loader = LevelLoader(self)
         tile = Tile(self.layers['tiles'])
         tile.image = pygame.Surface((50,50))
         tile.image.fill('black')

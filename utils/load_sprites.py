@@ -16,3 +16,26 @@ def get_animation(sheet, gridsize, spritesize, scale, y_location, start, length,
     for i in range(length):
         animation.append(get_image(sheet, gridsize, spritesize, scale, (start + i, y_location), offset, bg_color))
     return animation
+
+if __name__ == '__main__':
+    SPRITESHEETS = {
+        'dungeon-floor': pygame.image.load(os.path.join('assets', 'environment', 'dungeon-floor.png')),
+        'dungeon-wall': pygame.image.load(os.path.join('assets', 'environment', 'dungeon-wall.png'))
+    }
+   
+    pygame.init()
+    WIN = pygame.display.set_mode((500,500))
+
+    test_img = get_image(SPRITESHEETS['dungeon-floor'], (32,32), (32,32), 50/32, (1,3))
+    clock = pygame.time.Clock()
+
+    while True:
+        clock.tick(15)
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+        
+        WIN.fill((255,255,255))
+        WIN.blit(test_img, (0,0))
+
+        pygame.display.update()
