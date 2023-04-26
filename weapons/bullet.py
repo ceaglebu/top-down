@@ -8,10 +8,10 @@ from objects.particle import ParticleSpawner
 
 class Bullet(MovingObject):
     def __init__(self, group, game, gun, pos, velo, accel = Vector()):
-        image = get_image(pygame.image.load(os.path.join('assets', 'misc', 'bullet.png')).convert_alpha(), ANIMATION_TILESIZE, (8,25), 3, (0,2), (12,6)).convert_alpha()
-        super().__init__(group, game, image, start_pos=pos, start_velocity=velo, start_acceleration=accel)
-
+        
         self.gun = gun
+
+        super().__init__(group, game, self.gun.bullet_image, start_pos=pos, start_velocity=velo, start_acceleration=accel)
         
         if velo[1] != 0:
             rotate_angle = math.degrees(math.atan(velo[0]/velo[1]))

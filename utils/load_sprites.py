@@ -26,7 +26,7 @@ if __name__ == '__main__':
     pygame.init()
     WIN = pygame.display.set_mode((500,500))
 
-    test_img = get_image(SPRITESHEETS['dungeon-floor'], (32,32), (32,32), 50/32, (1,3))
+    test_img = get_image(pygame.image.load(os.path.join('assets', 'misc', 'bullet.png')).convert_alpha(), (16,16), (8,8),  4, (11,9), (5,4)).convert_alpha()
     clock = pygame.time.Clock()
 
     while True:

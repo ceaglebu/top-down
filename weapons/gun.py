@@ -7,6 +7,7 @@ from game.settings import BULLET_SPEED
 from utils.math import rot_center, snorm
 from weapons.bullet import Bullet
 from game.settings import *
+from utils.load_sprites import get_image
 
 class Gun(GameObject):
 
@@ -18,6 +19,8 @@ class Gun(GameObject):
         self.owner = owner
         self.offset = offset
         self.rect = ChildRect(self.image.get_rect(), offset)
+
+        self.bullet_image = get_image(pygame.image.load(os.path.join('assets', 'misc', 'bullet.png')).convert_alpha(), (16,16), (8,8), PLAYER_SCALE * 4/5, (11,9), (5,4)).convert_alpha()
     
     def get_endpoint(self):
         endpoint = Vector()
