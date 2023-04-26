@@ -74,7 +74,6 @@ class PlayerGun(Gun):
                         acceleration_strength_range=(5, 15),
                         time_range=(.2, 1),
                         angle_range=(self.angle - 30, self.angle + 30))
-        self.game.camera.shake(intensity = SHOOTING_SHAKE_INTENSITY, length = 50)
 
 
 class EnemyGun(Gun):
