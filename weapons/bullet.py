@@ -22,13 +22,13 @@ class Bullet(MovingObject):
             rotate_angle += 180
         self.image = pygame.transform.rotate(self.image, rotate_angle)
         self.rect = self.image.get_rect(center=pos)
-        self.collision_mask = pygame.mask.from_surface(self.image)
+        # self.collision_mask = pygame.mask.from_surface(self.image)
     
     def on_tile_collide(self, tile):
         ParticleSpawner(group=self.game.layers['particles'], 
                                 position=self.rect.center, 
-                                position_radius = 6, 
-                                count=5, 
+                                position_radius = 1, 
+                                count=3, 
                                 color='orange', 
                                 size_range=(5,10), 
                                 velocity_range=(200,300), 
@@ -71,20 +71,23 @@ class Bullet(MovingObject):
         return overlap.count() > 0
 
     def handle_collision(self):
-        self.collision_mask = pygame.mask.from_surface(self.image)
+        # self.collision_mask = pygame.mask.from_surface(self.image)
         off_screen = self.rect.right < 0 or self.rect.left > WIN_WIDTH or self.rect.bottom < 0 or self.rect.top > WIN_HEIGHT
         if off_screen:
             self.kill()
         for tile in self.game.layers['tiles']:
-            if self.is_overlapping(tile):
+            if self.rect.colliderect(tile.rect):
+            # self.is_overlapping(tile):
                 self.on_tile_collide(tile)
 
         if self.gun.owner is self.game.player:
             for enemy in self.game.layers['enemies']:
-                if self.is_overlapping(enemy):
+                if self.rect.colliderect(enemy.rect):
+                # self.is_overlapping(enemy):
                     self.on_enemy_collide(enemy)
         else:
-            if self.is_overlapping(self.game.player):
+            if self.rect.colliderect(self.game.player.collision_rect): 
+            # self.is_overlapping(self.game.player):
                 self.on_player_collide()
     
     def move(self, dt):

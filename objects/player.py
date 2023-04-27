@@ -6,8 +6,7 @@ from pygame.math import Vector2 as Vector
 from game.settings import *
 from game.event_timer import EventTimer, Timer
 from utils.load_sprites import get_animation, get_image
-from weapons.gun import PlayerGun
-from weapons.bullet_template import BulletTemplate
+from weapons.gun import PlayerShotgun, PlayerSemiAuto
 from .particle import *
 from .moving_object import MovingObject
 
@@ -40,14 +39,22 @@ class Player(MovingObject):
                                                      angle_range=(150, 390),
                                                      recallable=True)
 
-        bullet_template = BulletTemplate(
+        self.gun = PlayerShotgun(
+            gun_image= pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'shotgun.png')), .1 * PLAYER_SCALE).convert_alpha(),
             bullet_image= get_image(pygame.image.load(os.path.join('assets', 'misc', 'bullet.png')).convert_alpha(), (16,16), (8,8), PLAYER_SCALE * 4/5, (11,9), (5,4)).convert_alpha(),
-            reload_time= RELOAD_TIME, speed= BULLET_SPEED['player'],
-            count=1, angle_range = (-10, 10),
-            damage= 10
-        )
-        self.gun = PlayerGun(
-            bullet_template, self.game.layers['accessories'], self.game, self, Vector(4, 4) * PLAYER_SCALE)
+            reload_time= RELOAD_TIME * 2, speed= BULLET_SPEED['player'],
+            count=5, angle_range = (-10, 10),
+            damage= 3,
+            group= self.game.layers['accessories'], game= self.game, owner= self, 
+            offset= Vector(4, 4) * PLAYER_SCALE)
+        # self.gun = PlayerSemiAuto(
+        #     gun_image= pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'shotgun.png')), .1 * PLAYER_SCALE).convert_alpha(),
+        #     bullet_image= get_image(pygame.image.load(os.path.join('assets', 'misc', 'bullet.png')).convert_alpha(), (16,16), (8,8), PLAYER_SCALE * 4/5, (11,9), (5,4)).convert_alpha(),
+        #     reload_time= RELOAD_TIME, speed= BULLET_SPEED['player'],
+        #     angle_range = (-10, 10),
+        #     damage= 10,
+        #     group= self.game.layers['accessories'], game= self.game, owner= self, 
+        #     offset= Vector(4, 4) * PLAYER_SCALE)
 
         # State
         self.is_rolling = False
@@ -140,7 +147,7 @@ class Player(MovingObject):
         def reload(self):
             self.reload = True
         self.game.timers.append(EventTimer(
-            self.gun.bullet_template.reload_time * 1000, reload, self))
+            self.gun.reload_time * 1000, reload, self))
 
     def think(self, dt):
         self.handle_direction_input(dt)

@@ -4,23 +4,24 @@ from objects.child_rect import ChildRect
 from pygame.math import Vector2 as Vector
 from objects.game_object import GameObject
 from game.settings import BULLET_SPEED
-from utils.math import rot_center, snorm
+from utils.math import rot_center, snorm, angle_to_vector
 from weapons.bullet import Bullet
 from game.settings import *
 from utils.load_sprites import get_image
-from weapons.bullet_template import AmmoTemplate
+from game.event_timer import EventTimer
+import random as rand
 
 class Gun(GameObject):
 
-    def __init__(self, bullet_template, group, game, owner, offset = Vector(0,0)):
-        default_image = pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'shotgun.png')), .1 * PLAYER_SCALE).convert_alpha()
+    def __init__(self, gun_image, bullet_image, group, game, owner, offset = Vector(0,0)):
+        default_image = gun_image
         super().__init__(group, game, default_image, start_pos=Vector(default_image.get_rect().center))
     
         self.owner = owner
         self.offset = offset
         self.rect = ChildRect(self.image.get_rect(), offset)
 
-        self.bullet_template = bullet_template
+        self.bullet_image = bullet_image
     
     def get_endpoint(self):
         endpoint = Vector()
@@ -51,16 +52,15 @@ class Gun(GameObject):
         self.position = Vector(self.rect.center)
     
     def shoot(self, dir):
-        # Create bullet
-        self.bullet_template.instantiate(self.game.layers['bullets'], self.game, self, dir.normalize())
+        pass
 
     def update(self, dt):
         self.point()
 
 class PlayerGun(Gun):
     
-    def __init__(self, bullet_template, group, game, owner, offset=Vector(0, 0)):
-        super().__init__(bullet_template, group, game, owner, offset)
+    def __init__(self, gun_image, bullet_image, group, game, owner, offset=Vector(0, 0)):
+        super().__init__(gun_image, bullet_image, group, game, owner, offset)
     
     def point(self):
         super().point(self.game.mouse_pos)
@@ -77,10 +77,54 @@ class PlayerGun(Gun):
                         acceleration_strength_range=(5, 15),
                         time_range=(.2, 1),
                         angle_range=(self.angle - 30, self.angle + 30))
+        
+
+class PlayerSemiAuto(PlayerGun):
+
+    def __init__(self, gun_image, bullet_image, reload_time, speed, angle_range, damage, group, game, owner, offset=Vector()):
+        super().__init__(gun_image, bullet_image, group, game, owner, offset)
+        self.reload_time = reload_time
+        self.speed = speed
+        self.angle_range = angle_range
+        self.damage = damage
+
+    def shoot(self, dir):
+        super().shoot(dir)
+        angle = rand.uniform(*self.angle_range) + Vector().angle_to(Vector(*dir))
+        Bullet(self.bullet_image, self.game.layers['bullets'], self.game, self, self.damage, 
+            self.get_endpoint(), snorm(angle_to_vector(angle), self.speed))
+
+class PlayerShotgun(PlayerGun):
+
+    def __init__(self, gun_image, bullet_image, reload_time, speed, count, angle_range, damage, group, game, owner, offset=Vector()):
+        super().__init__(gun_image, bullet_image, group, game, owner, offset)
+        self.reload_time = reload_time
+        self.speed = speed
+        self.count = count
+        self.angle_range = angle_range
+        self.damage = damage
+    
+    def shoot(self, dir):
+        super().shoot(dir)
+        for i in range(self.count):
+            angle = self.angle_range[0] + i * ((self.angle_range[1] - self.angle_range[0]) / self.count) \
+                + Vector().angle_to(Vector(*dir))
+            Bullet(self.bullet_image, self.game.layers['bullets'], self.game, self, self.damage,
+                self.get_endpoint(), snorm(angle_to_vector(angle), self.speed))
+
 
 
 class EnemyGun(Gun):
+    def __init__(self, gun_image, bullet_image, speed, damage, group, game, owner, offset=Vector()):
+        super().__init__(gun_image, bullet_image, group, game, owner, offset)
+        self.damage = damage
+        self.speed = speed
 
     def point(self):
         super().point(self.game.player.position)
+    
+    def shoot(self, dir):
+        Bullet(self.bullet_image, self.game.layers['bullets'], self.game, self, self.damage, 
+            self.get_endpoint(), snorm(dir, self.speed))
+
 
