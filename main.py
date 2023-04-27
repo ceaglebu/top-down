@@ -25,7 +25,7 @@ class Game:
             'bullets': SpriteGroup3d(2),
             'player-particles': ParticleGroup(3),
             'player': SpriteGroup3d(4),
-            'enemies': SpriteGroup3d(5),
+            'enemies': SpriteGroup3d(4),
             'accessories': SpriteGroup3d(6),
             'particles': ParticleGroup(7)
         }

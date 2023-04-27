@@ -7,12 +7,13 @@ from utils.load_sprites import get_image, get_animation
 from objects.particle import ParticleSpawner
 
 class Bullet(MovingObject):
-    def __init__(self, group, game, gun, pos, velo, accel = Vector()):
+    def __init__(self, image, group, game, gun, damage, pos, velo, accel = Vector()):
         
         self.gun = gun
 
-        super().__init__(group, game, self.gun.bullet_image, start_pos=pos, start_velocity=velo, start_acceleration=accel)
-        
+        super().__init__(group, game, image, start_pos=pos, start_velocity=velo, start_acceleration=accel)
+        self.damage = damage
+
         if velo[1] != 0:
             rotate_angle = math.degrees(math.atan(velo[0]/velo[1]))
         else:
@@ -24,10 +25,20 @@ class Bullet(MovingObject):
         self.collision_mask = pygame.mask.from_surface(self.image)
     
     def on_tile_collide(self, tile):
+        ParticleSpawner(group=self.game.layers['particles'], 
+                                position=self.rect.center, 
+                                position_radius = 6, 
+                                count=5, 
+                                color='orange', 
+                                size_range=(5,10), 
+                                velocity_range=(200,300), 
+                                acceleration_strength_range=(8,10), 
+                                time_range=(.2,1), 
+                                angle_range = (0,360))
         self.kill()
     
     def on_enemy_collide(self, enemy):
-        enemy.take_damage(10)
+        enemy.take_damage(self.damage)
         ParticleSpawner(group=self.game.layers['particles'], 
                                 position=self.rect.center, 
                                 position_radius = 6, 
@@ -83,4 +94,5 @@ class Bullet(MovingObject):
     
     def think(self, dt):
         # Bullets don't think! ;)
+        # yet*
         pass

@@ -1,7 +1,8 @@
 from utils.animation import AnimationData
 from game.event_timer import EventTimer
 from weapons.gun import EnemyGun
-from utils.load_sprites import get_animation
+from utils.load_sprites import get_animation, get_image
+from weapons.bullet_template import BulletTemplate
 from game.settings import *
 import os
 import pygame
@@ -27,9 +28,15 @@ class Enemy(MovingObject):
 
         self.health = 100
         self.is_alive = True
-
+        
+        bullet_template = BulletTemplate(
+            bullet_image= get_image(pygame.image.load(os.path.join('assets', 'misc', 'bullet.png')).convert_alpha(), (16,16), (8,8), PLAYER_SCALE * 4/5, (11,9), (5,4)).convert_alpha(),
+            reload_time= RELOAD_TIME, speed= BULLET_SPEED['enemy'],
+            count=1, angle_range = (-5, 5),
+            damage= 1
+        )
         self.gun = EnemyGun(
-            BULLET_SPEED['enemy_test'], self.game.layers['accessories'],  game, owner=self, offset=(20, 15))
+            bullet_template, self.game.layers['accessories'],  game, owner=self, offset=(20, 15))
         self.can_act = True
         self.can_attack = False
 

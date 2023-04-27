@@ -5,8 +5,9 @@ import os
 from pygame.math import Vector2 as Vector
 from game.settings import *
 from game.event_timer import EventTimer, Timer
-from utils.load_sprites import get_animation
+from utils.load_sprites import get_animation, get_image
 from weapons.gun import PlayerGun
+from weapons.bullet_template import BulletTemplate
 from .particle import *
 from .moving_object import MovingObject
 
@@ -39,8 +40,14 @@ class Player(MovingObject):
                                                      angle_range=(150, 390),
                                                      recallable=True)
 
+        bullet_template = BulletTemplate(
+            bullet_image= get_image(pygame.image.load(os.path.join('assets', 'misc', 'bullet.png')).convert_alpha(), (16,16), (8,8), PLAYER_SCALE * 4/5, (11,9), (5,4)).convert_alpha(),
+            reload_time= RELOAD_TIME, speed= BULLET_SPEED['player'],
+            count=1, angle_range = (-10, 10),
+            damage= 10
+        )
         self.gun = PlayerGun(
-            BULLET_SPEED['player_test'], self.game.layers['accessories'], self.game, self, Vector(4, 4) * PLAYER_SCALE)
+            bullet_template, self.game.layers['accessories'], self.game, self, Vector(4, 4) * PLAYER_SCALE)
 
         # State
         self.is_rolling = False
@@ -133,7 +140,7 @@ class Player(MovingObject):
         def reload(self):
             self.reload = True
         self.game.timers.append(EventTimer(
-            RELOAD_TIME * 1000, reload, self))
+            self.gun.bullet_template.reload_time * 1000, reload, self))
 
     def think(self, dt):
         self.handle_direction_input(dt)

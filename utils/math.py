@@ -1,4 +1,4 @@
-import pygame
+import pygame,math
 from pygame.math import Vector2 as Vector
 
 def rot_center(image, angle, x, y):
@@ -13,3 +13,6 @@ def snorm(vector, speed):
         return Vector()
     else:
         return vector.normalize() * speed
+
+def angle_to_vector(angle):
+    return Vector(math.cos(math.radians(angle)), math.sin(math.radians(angle)))

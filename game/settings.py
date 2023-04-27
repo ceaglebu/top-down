@@ -29,8 +29,8 @@ RELOAD_TIME = .2
 ENABLE_SPRAY = True
 
 BULLET_SPEED = {
-    'player_test': 1500,
-    'enemy_test': 500
+    'player': 1500,
+    'enemy': 500
 }
 
 CAMERA_SHAKE_INTENSITY = 200

@@ -8,19 +8,19 @@ from utils.math import rot_center, snorm
 from weapons.bullet import Bullet
 from game.settings import *
 from utils.load_sprites import get_image
+from weapons.bullet_template import AmmoTemplate
 
 class Gun(GameObject):
 
-    def __init__(self, bullet_speed, group, game, owner, offset = Vector(0,0)):
+    def __init__(self, bullet_template, group, game, owner, offset = Vector(0,0)):
         default_image = pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'shotgun.png')), .1 * PLAYER_SCALE).convert_alpha()
         super().__init__(group, game, default_image, start_pos=Vector(default_image.get_rect().center))
-        
-        self.bullet_speed = bullet_speed
+    
         self.owner = owner
         self.offset = offset
         self.rect = ChildRect(self.image.get_rect(), offset)
 
-        self.bullet_image = get_image(pygame.image.load(os.path.join('assets', 'misc', 'bullet.png')).convert_alpha(), (16,16), (8,8), PLAYER_SCALE * 4/5, (11,9), (5,4)).convert_alpha()
+        self.bullet_template = bullet_template
     
     def get_endpoint(self):
         endpoint = Vector()
@@ -52,15 +52,15 @@ class Gun(GameObject):
     
     def shoot(self, dir):
         # Create bullet
-        Bullet(self.game.layers['bullets'], self.game, self,
-               self.get_endpoint(), snorm(dir, self.bullet_speed))
+        self.bullet_template.instantiate(self.game.layers['bullets'], self.game, self, dir.normalize())
 
     def update(self, dt):
         self.point()
 
 class PlayerGun(Gun):
-    def __init__(self, bullet_speed, group, game, owner, offset=Vector(0, 0)):
-        super().__init__(bullet_speed, group, game, owner, offset)
+    
+    def __init__(self, bullet_template, group, game, owner, offset=Vector(0, 0)):
+        super().__init__(bullet_template, group, game, owner, offset)
     
     def point(self):
         super().point(self.game.mouse_pos)
@@ -80,10 +80,6 @@ class PlayerGun(Gun):
 
 
 class EnemyGun(Gun):
-
-    def __init__(self, bullet_speed, group, game, owner, offset=Vector(0, 0)):
-        super().__init__(bullet_speed, group, game, owner, offset)
-
 
     def point(self):
         super().point(self.game.player.position)

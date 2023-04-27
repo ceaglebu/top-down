@@ -66,5 +66,5 @@ class CameraGroup:
                 if isinstance(object, pygame.sprite.Sprite):
                     self.game.screen.blit(object.image, Vector(object.rect.topleft) + self.offset)
                 elif isinstance(object, Particle):
-                    if object.position.x > 0:
+                    if object.position.x + self.offset.x > 0:
                         pygame.draw.circle(self.game.screen, object.color, object.position + self.offset, object.size / 2)
