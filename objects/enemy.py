@@ -2,6 +2,7 @@ from utils.animation import AnimationData
 from game.event_timer import EventTimer
 from weapons.gun import EnemyGun
 from utils.load_sprites import get_animation, get_image
+from game.sounds import Sound
 from game.settings import *
 import os
 import pygame
@@ -112,6 +113,7 @@ class Enemy(MovingObject):
             self.gun.kill()
             self.kill()
             self.game.camera.shake(intensity=ENEMY_DIES_SHAKE_INTENSITY)
+            self.game.sound.play(Sound('enemy_death', VOLUME))
         self.is_alive = False
 
         self.red_highlight()

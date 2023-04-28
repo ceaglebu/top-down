@@ -6,6 +6,7 @@ from objects.particle import *
 from game.camera import SpriteGroup3d, CameraGroup
 from game.event_timer import EventTimer
 from game.level_loader import LevelLoader
+from game.sounds import SoundHandler
 
 class Game:
 
@@ -31,6 +32,7 @@ class Game:
         }
 
         self.camera = CameraGroup(self)
+        self.sound = SoundHandler()
         
         self.bullet_time = False
 

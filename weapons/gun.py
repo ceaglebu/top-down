@@ -67,6 +67,7 @@ class PlayerGun(Gun):
     
     def shoot(self, dir):
         super().shoot(dir)
+        self.game.camera.shake(intensity=500, length = .05)
         ParticleSpawner(group=self.game.layers['particles'],
                         position=self.get_endpoint(),
                         position_radius=5,
