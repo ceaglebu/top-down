@@ -41,7 +41,7 @@ class Player(MovingObject):
         self.hurt_sound = Sound('hurt', VOLUME / 2)
 
         self.roll = abilities.roll.Roll(game, self)
-        self.ability = abilities.cannonball.Cannonball(game, self)
+        self.ability = abilities.reflect.Reflect(game, self)
         self.abilities = [self.roll, self.ability]
         # self.gun = PlayerSemiAuto(
         #     gun_image= pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'shotgun.png')), .1 * PLAYER_SCALE).convert_alpha(),
