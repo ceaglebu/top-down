@@ -1,4 +1,5 @@
-from abilities.ability import ReflectAbility, Roll
+from abilities.reflect import Reflect
+from abilities.roll import Roll
 from utils.animation import AnimationData
 import pygame
 import sys
@@ -38,7 +39,7 @@ class Player(MovingObject):
 
 
         self.roll = Roll(game, self)
-        self.ability = ReflectAbility(self.game)
+        self.ability = Reflect(self.game)
         self.abilities = [self.roll, self.ability]
         # self.gun = PlayerSemiAuto(
         #     gun_image= pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'shotgun.png')), .1 * PLAYER_SCALE).convert_alpha(),
