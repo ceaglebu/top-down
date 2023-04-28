@@ -49,6 +49,7 @@ class Player(MovingObject):
             group= self.game.layers['accessories'], game= self.game, owner= self, 
             offset= Vector(4, 4) * PLAYER_SCALE)
 
+        self.key_abilities = []
         self.ability = ReflectAbility(self.game)
         # self.gun = PlayerSemiAuto(
         #     gun_image= pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'shotgun.png')), .1 * PLAYER_SCALE).convert_alpha(),
@@ -151,6 +152,14 @@ class Player(MovingObject):
             self.reload = True
         self.game.timers.append(EventTimer(
             self.gun.reload_time * 1000, reload, self))
+    
+    def check_use_ability(self):
+        for ability in self.key_abilities:
+            if self.game.keys_down[ability.key]:
+                ability.use()
+        if self.game.keys_down[self.ability.key]:
+            self.ability.use()
+
 
     def think(self, dt):
         self.handle_direction_input(dt)
@@ -159,8 +168,7 @@ class Player(MovingObject):
 
         if self.game.keys_down[pygame.K_SPACE] and can_really_roll:
             self.start_roll(dt)
-        if self.game.keys_down[pygame.K_e]:
-            self.ability.use()
+        self.check_use_ability()
 
         clicked = False
         for event in self.game.events:

@@ -2,12 +2,14 @@ import math
 from game.event_timer import EventTimer
 from pygame.math import Vector2 as Vector
 from utils.math import snorm
+import pygame
 
 class Ability:
-    def __init__(self, game, cooldown):
+    def __init__(self, game, cooldown, key=pygame.K_e):
         self.game = game
         self.cooldown = cooldown
         self.can_use = True
+        self.key = key
     
     def reset_can_use(self):
         self.can_use = True
@@ -27,7 +29,7 @@ class Ability:
 
 
 class ReflectAbility(Ability):
-    def __init__(self, game, cooldown=0000, dist_threshold=500):
+    def __init__(self, game, cooldown=5000, dist_threshold=500):
         super().__init__(game, cooldown)
         self.dist_threshold = dist_threshold
 

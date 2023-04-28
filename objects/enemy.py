@@ -32,7 +32,7 @@ class Enemy(MovingObject):
             gun_image= pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'shotgun.png')), .1 * PLAYER_SCALE).convert_alpha(),
             bullet_image= get_image(pygame.image.load(os.path.join('assets', 'misc', 'bullet.png')).convert_alpha(), (16,16), (8,8), PLAYER_SCALE * 4/5, (11,9), (5,4)).convert_alpha(),
             speed = BULLET_SPEED['enemy'],
-            damage = 1,
+            damage = 10,
             group= self.game.layers['accessories'], game= self.game, owner= self, 
             offset= Vector(4, 4) * PLAYER_SCALE)
     
