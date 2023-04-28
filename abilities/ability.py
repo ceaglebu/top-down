@@ -34,8 +34,8 @@ class Ability:
                 self.game.timers.append(EventTimer(self.duration, self.on_ability_end))
             self.pop()
         else:
-            self.game.sound.play(Sound('invalid_action', VOLUME))
-            pass
+            if self.game.keys_pressed[self.key]:
+                self.game.sound.play(Sound('invalid_action', VOLUME))
 
     def pop(self):
         pass

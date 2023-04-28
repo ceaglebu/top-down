@@ -54,6 +54,7 @@ class Game:
             self.events = pygame.event.get()
 
             self.keys_down = pygame.key.get_pressed()
+            self.keys_pressed = [0 for _ in range(512)]
             self.mouse_buttons = pygame.mouse.get_pressed()
             self.mouse_pos = Vector(pygame.mouse.get_pos())
 
@@ -62,14 +63,13 @@ class Game:
                     pygame.quit()
                     sys.exit()
                 
-                if event.type == pygame.KEYDOWN and event.key == pygame.K_g:
-                    self.start_bullet_time(1000)
+                if event.type == pygame.KEYDOWN:
+                    self.keys_pressed[event.key] = 1
                 
                 # For ez testing
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
                     run = False
                     restart = True
-
             
             for layer in self.layers.values():
                 layer.update(dt)
