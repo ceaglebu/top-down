@@ -64,7 +64,8 @@ class Game:
                     sys.exit()
                 
                 if event.type == pygame.KEYDOWN:
-                    self.keys_pressed[event.key] = 1
+                    if event.key < 512:
+                        self.keys_pressed[event.key] = 1
                 
                 # For ez testing
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
