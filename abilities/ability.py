@@ -3,13 +3,14 @@ import pygame
 
 
 class Ability:
-    def __init__(self, game, cooldown, key=pygame.K_e, duration=0):
+    def __init__(self, game, player, cooldown, key=pygame.K_e, duration=0):
         self.game = game
         self.cooldown = cooldown
         self.can_use = True
         self.is_active = False
         self.key = key
         self.duration = duration
+        self.player = player
 
     def reset_can_use(self):
         self.can_use = True

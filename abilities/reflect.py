@@ -4,12 +4,12 @@ from utils.math import snorm
 
 
 class Reflect(Ability):
-    def __init__(self, game, cooldown=5000, dist_threshold=500):
-        super().__init__(game, cooldown)
+    def __init__(self, game, player, cooldown=5000, dist_threshold=500):
+        super().__init__(game, player, cooldown)
         self.dist_threshold = dist_threshold
 
     def pop(self):
-        player = self.game.player
+        player = self.player
         p_center = player.rect.center
         for bullet in self.game.layers['bullets']:
             if bullet.gun.owner is not player:

@@ -6,9 +6,8 @@ import pygame
 
 class Roll(Ability):
     def __init__(self, game, player, cooldown=(ROLL_COOLDOWN), key=pygame.K_SPACE, particle_cooldown=(ROLL_PARTICLE_COOLDOWN)):
-        super().__init__(game, cooldown, key, duration=(3000/FRICTION_STRENGTH))
+        super().__init__(game, player, cooldown, key, duration=(3000/FRICTION_STRENGTH))
         self.particle_cooldown = particle_cooldown
-        self.player = player
         self.roll_particle_spawner = ParticleSpawner(group=self.game.layers['player-particles'],
                                                      position=(0, 0),
                                                      position_radius=5,
