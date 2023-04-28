@@ -1,5 +1,4 @@
-from abilities.reflect import Reflect
-from abilities.roll import Roll
+import abilities
 from utils.animation import AnimationData
 import pygame
 import sys
@@ -41,8 +40,8 @@ class Player(MovingObject):
         self.shoot_sound = Sound('shoot', VOLUME)
         self.hurt_sound = Sound('hurt', VOLUME / 2)
 
-        self.roll = Roll(game, self)
-        self.ability = Reflect(game, self)
+        self.roll = abilities.roll.Roll(game, self)
+        self.ability = abilities.reflect.Reflect(game, self)
         self.abilities = [self.roll, self.ability]
         # self.gun = PlayerSemiAuto(
         #     gun_image= pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'shotgun.png')), .1 * PLAYER_SCALE).convert_alpha(),
