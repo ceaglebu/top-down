@@ -1,3 +1,4 @@
+from abilities.ability import ReflectAbility, Roll
 from utils.animation import AnimationData
 import pygame
 import sys
@@ -27,23 +28,20 @@ class Player(MovingObject):
         animation_data = AnimationData(animations, animations['idle'])
         super().__init__(group, game, animations['idle'][0], animation_data)
 
-        self.shoot_sound = Sound('shoot', VOLUME)
-        self.roll_sound = Sound('roll', VOLUME)
+        self.gun = PlayerShotgun(
+            gun_image= pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'shotgun.png')), .1 * PLAYER_SCALE).convert_alpha(),
+            bullet_image= get_image(pygame.image.load(os.path.join('assets', 'misc', 'bullet.png')).convert_alpha(), (16,16), (8,8), PLAYER_SCALE * 4/5, (11,9), (5,4)).convert_alpha(),
+            reload_time= RELOAD_TIME * 2, speed= BULLET_SPEED['player'],
+            count=5, angle_range = (-10, 10),
+            damage= 3,
+            group= self.game.layers['accessories'], game= self.game, owner= self, 
+            offset= Vector(4, 4) * PLAYER_SCALE)
 
-        self.roll_particle_spawner = ParticleSpawner(group=self.game.layers['player-particles'],
-                                                     position=(0, 0),
-                                                     position_radius=5,
-                                                     count=3,
-                                                     color=((10, 10, 10)),
-                                                     size_range=(10, 20),
-                                                     velocity_range=(50, 100),
-                                                     acceleration_strength_range=(
-                                                         5, 7),
-                                                     time_range=(.2, 1),
-                                                     angle_range=(150, 390),
-                                                     recallable=True)
 
-        # self.gun = PlayerShotgun(
+        self.roll = Roll(game, self)
+        self.ability = ReflectAbility(self.game)
+        self.abilities = [self.roll, self.ability]
+        # self.gun = PlayerSemiAuto(
         #     gun_image= pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'shotgun.png')), .1 * PLAYER_SCALE).convert_alpha(),
         #     bullet_image= get_image(pygame.image.load(os.path.join('assets', 'misc', 'bullet.png')).convert_alpha(), (16,16), (8,8), PLAYER_SCALE * 4/5, (11,9), (5,4)).convert_alpha(),
         #     reload_time= RELOAD_TIME * 2, speed= BULLET_SPEED['player'],
@@ -61,8 +59,7 @@ class Player(MovingObject):
             offset= Vector(4, 4) * PLAYER_SCALE)
 
         # State
-        self.is_rolling = False
-        self.can_roll = True
+
         self.reload = True
 
     def handle_direction_input(self, dt):
@@ -90,54 +87,6 @@ class Player(MovingObject):
         if self.movement_control.magnitude() != 0:
             self.movement_control = self.movement_control.normalize() * PLAYER_SPEED
 
-    def reset_roll(self):
-        self.can_roll = True
-
-    def end_roll(self):
-        self.is_rolling = False
-        if self.animation.active_animation == self.get_animation_by_key('roll'):
-            self.set_animation('idle')
-
-    def start_roll_particles(self):
-        def spawn_roll_particles(self):
-            if self.is_rolling:
-                self.roll_particle_spawner.spawn(
-                    4, self.collision_rect.midbottom)
-                self.game.timers.append(EventTimer(
-                    ROLL_PARTICLE_COOLDOWN * 1000, spawn_roll_particles, self))
-        spawn_roll_particles(self)
-        self.game.timers.append(EventTimer(
-            ROLL_PARTICLE_COOLDOWN * 1000, spawn_roll_particles, self))
-
-    def start_roll(self, dt):
-        self.is_rolling = True
-        self.can_roll = False
-        self.set_animation('roll')
-        self.start_roll_particles()
-        self.game.sound.play(self.roll_sound)
-
-        self.game.timers.append(EventTimer(
-            ROLL_COOLDOWN * 1000, self.reset_roll))
-
-        self.game.timers.append(EventTimer(
-            3 * 1000 / FRICTION_STRENGTH, self.end_roll))
-
-        if self.movement_control.magnitude() != 0:
-            self.phys_velocity += self.movement_control.normalize() * ROLL_STRENGTH
-
-    def hit(self, dir):
-        is_hit = not self.is_rolling
-        if is_hit:
-            self.take_knockback(dir)
-            self.game.camera.shake()
-        return is_hit
-
-    def take_knockback(self, dir):
-        self.phys_velocity += PLAYER_KNOCKBACK_STRENGTH * dir.normalize()
-
-    def take_recoil(self, dir):
-        self.phys_velocity += RECOIL_STRENGTH * dir.normalize()
-
     def shoot(self, dt):
         # Create bullet
         dir = self.game.mouse_pos - self.position
@@ -154,14 +103,30 @@ class Player(MovingObject):
             self.reload = True
         self.game.timers.append(EventTimer(
             self.gun.reload_time * 1000, reload, self))
+    
+    def check_use_ability(self):
+        for ability in self.abilities:
+            if self.game.keys_down[ability.key]:
+                ability.use()
+    
+    def hit(self, dir):
+        is_hit = not self.roll.is_active
+        if is_hit:
+            self.take_knockback(dir)
+            self.game.camera.shake()
+        return is_hit
+
+    def take_knockback(self, dir):
+        self.phys_velocity += PLAYER_KNOCKBACK_STRENGTH * dir.normalize()
+
+    def take_recoil(self, dir):
+        self.phys_velocity += RECOIL_STRENGTH * dir.normalize()
+
 
     def think(self, dt):
         self.handle_direction_input(dt)
-        can_really_roll = self.can_roll and self.phys_velocity.magnitude(
-        ) <= 500 and self.movement_control.magnitude() != 0
 
-        if self.game.keys_down[pygame.K_SPACE] and can_really_roll:
-            self.start_roll(dt)
+        self.check_use_ability()
 
         clicked = False
         for event in self.game.events:
@@ -176,9 +141,9 @@ class Player(MovingObject):
 
     def post_collision(self, dt, collision):
         (x_collision, y_collision) = collision
-        if self.velocity.magnitude() == 0 or (not self.is_rolling and ((x_collision and self.movement_control.x != 0 and self.movement_control.y == 0) or (y_collision and self.movement_control.y != 0 and self.movement_control.x == 0))):
+        if self.velocity.magnitude() == 0 or (not self.roll.is_active and ((x_collision and self.movement_control.x != 0 and self.movement_control.y == 0) or (y_collision and self.movement_control.y != 0 and self.movement_control.x == 0))):
             self.set_animation('idle')
-        elif not self.is_rolling and self.movement_control.magnitude() > 10:
+        elif not self.roll.is_active and self.movement_control.magnitude() > 10:
             self.set_animation('run')
 
         self.gun.rect.center = self.position + self.gun.rect.offset
