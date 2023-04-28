@@ -1,3 +1,4 @@
+from abilities.ability import ReflectAbility
 from utils.animation import AnimationData
 import pygame
 import sys
@@ -47,6 +48,8 @@ class Player(MovingObject):
             damage= 3,
             group= self.game.layers['accessories'], game= self.game, owner= self, 
             offset= Vector(4, 4) * PLAYER_SCALE)
+
+        self.ability = ReflectAbility(self.game)
         # self.gun = PlayerSemiAuto(
         #     gun_image= pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'shotgun.png')), .1 * PLAYER_SCALE).convert_alpha(),
         #     bullet_image= get_image(pygame.image.load(os.path.join('assets', 'misc', 'bullet.png')).convert_alpha(), (16,16), (8,8), PLAYER_SCALE * 4/5, (11,9), (5,4)).convert_alpha(),
@@ -156,6 +159,8 @@ class Player(MovingObject):
 
         if self.game.keys_down[pygame.K_SPACE] and can_really_roll:
             self.start_roll(dt)
+        if self.game.keys_down[pygame.K_e]:
+            self.ability.use()
 
         clicked = False
         for event in self.game.events:
