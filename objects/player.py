@@ -7,6 +7,7 @@ from game.settings import *
 from game.event_timer import EventTimer, Timer
 from utils.load_sprites import get_animation, get_image
 from weapons.gun import PlayerShotgun, PlayerSemiAuto
+from game.sounds import Sound
 from .particle import *
 from .moving_object import MovingObject
 
@@ -26,6 +27,9 @@ class Player(MovingObject):
         animation_data = AnimationData(animations, animations['idle'])
         super().__init__(group, game, animations['idle'][0], animation_data)
 
+        self.shoot_sound = Sound('shoot', VOLUME)
+        self.roll_sound = Sound('roll', VOLUME)
+
         self.roll_particle_spawner = ParticleSpawner(group=self.game.layers['player-particles'],
                                                      position=(0, 0),
                                                      position_radius=5,
@@ -39,22 +43,22 @@ class Player(MovingObject):
                                                      angle_range=(150, 390),
                                                      recallable=True)
 
-        self.gun = PlayerShotgun(
-            gun_image= pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'shotgun.png')), .1 * PLAYER_SCALE).convert_alpha(),
-            bullet_image= get_image(pygame.image.load(os.path.join('assets', 'misc', 'bullet.png')).convert_alpha(), (16,16), (8,8), PLAYER_SCALE * 4/5, (11,9), (5,4)).convert_alpha(),
-            reload_time= RELOAD_TIME * 2, speed= BULLET_SPEED['player'],
-            count=5, angle_range = (-10, 10),
-            damage= 3,
-            group= self.game.layers['accessories'], game= self.game, owner= self, 
-            offset= Vector(4, 4) * PLAYER_SCALE)
-        # self.gun = PlayerSemiAuto(
+        # self.gun = PlayerShotgun(
         #     gun_image= pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'shotgun.png')), .1 * PLAYER_SCALE).convert_alpha(),
         #     bullet_image= get_image(pygame.image.load(os.path.join('assets', 'misc', 'bullet.png')).convert_alpha(), (16,16), (8,8), PLAYER_SCALE * 4/5, (11,9), (5,4)).convert_alpha(),
-        #     reload_time= RELOAD_TIME, speed= BULLET_SPEED['player'],
-        #     angle_range = (-10, 10),
-        #     damage= 10,
+        #     reload_time= RELOAD_TIME * 2, speed= BULLET_SPEED['player'],
+        #     count=5, angle_range = (-10, 10),
+        #     damage= 3,
         #     group= self.game.layers['accessories'], game= self.game, owner= self, 
         #     offset= Vector(4, 4) * PLAYER_SCALE)
+        self.gun = PlayerSemiAuto(
+            gun_image= pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'shotgun.png')), .1 * PLAYER_SCALE).convert_alpha(),
+            bullet_image= get_image(pygame.image.load(os.path.join('assets', 'misc', 'bullet.png')).convert_alpha(), (16,16), (8,8), PLAYER_SCALE * 4/5, (11,9), (5,4)).convert_alpha(),
+            reload_time= RELOAD_TIME, speed= BULLET_SPEED['player'],
+            angle_range = (-10, 10),
+            damage= 10,
+            group= self.game.layers['accessories'], game= self.game, owner= self, 
+            offset= Vector(4, 4) * PLAYER_SCALE)
 
         # State
         self.is_rolling = False
@@ -110,6 +114,7 @@ class Player(MovingObject):
         self.can_roll = False
         self.set_animation('roll')
         self.start_roll_particles()
+        self.game.sound.play(self.roll_sound)
 
         self.game.timers.append(EventTimer(
             ROLL_COOLDOWN * 1000, self.reset_roll))
@@ -137,6 +142,7 @@ class Player(MovingObject):
         # Create bullet
         dir = self.game.mouse_pos - self.position
         self.gun.shoot(dir)
+        self.game.sound.play(self.shoot_sound)
 
         # Handle recoil
         self.take_recoil(self.position - self.game.mouse_pos)
