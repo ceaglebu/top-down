@@ -1,6 +1,8 @@
 from abilities.ability import Ability
 from game.event_timer import EventTimer
 from game.settings import FRICTION_STRENGTH, ROLL_COOLDOWN, ROLL_PARTICLE_COOLDOWN, ROLL_STRENGTH
+from game.sounds import Sound
+from game.settings import *
 from objects.particle import ParticleSpawner
 import pygame
 
@@ -8,6 +10,7 @@ class Roll(Ability):
     def __init__(self, game, player, cooldown=(ROLL_COOLDOWN), key=pygame.K_SPACE, particle_cooldown=(ROLL_PARTICLE_COOLDOWN)):
         super().__init__(game, player, cooldown, key, duration=(3000/FRICTION_STRENGTH))
         self.particle_cooldown = particle_cooldown
+        self.sound = Sound('roll', VOLUME * 2)
         self.roll_particle_spawner = ParticleSpawner(group=self.game.layers['player-particles'],
                                                      position=(0, 0),
                                                      position_radius=5,
@@ -42,6 +45,7 @@ class Roll(Ability):
     def start_roll(self):
         self.player.set_animation('roll')
         self.spawn_roll_particles()
+        self.game.sound.play(self.sound)
 
         if self.player.movement_control.magnitude() != 0:
             self.player.phys_velocity += self.player.movement_control.normalize() * \

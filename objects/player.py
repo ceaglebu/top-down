@@ -38,6 +38,8 @@ class Player(MovingObject):
             group= self.game.layers['accessories'], game= self.game, owner= self, 
             offset= Vector(4, 4) * PLAYER_SCALE)
 
+        self.shoot_sound = Sound('shoot', VOLUME)
+        self.hurt_sound = Sound('hurt', VOLUME / 2)
 
         self.roll = Roll(game, self)
         self.ability = Reflect(game, self)
@@ -50,14 +52,6 @@ class Player(MovingObject):
         #     damage= 3,
         #     group= self.game.layers['accessories'], game= self.game, owner= self, 
         #     offset= Vector(4, 4) * PLAYER_SCALE)
-        self.gun = PlayerSemiAuto(
-            gun_image= pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'shotgun.png')), .1 * PLAYER_SCALE).convert_alpha(),
-            bullet_image= get_image(pygame.image.load(os.path.join('assets', 'misc', 'bullet.png')).convert_alpha(), (16,16), (8,8), PLAYER_SCALE * 4/5, (11,9), (5,4)).convert_alpha(),
-            reload_time= RELOAD_TIME, speed= BULLET_SPEED['player'],
-            angle_range = (-10, 10),
-            damage= 10,
-            group= self.game.layers['accessories'], game= self.game, owner= self, 
-            offset= Vector(4, 4) * PLAYER_SCALE)
 
         # State
 
@@ -115,6 +109,7 @@ class Player(MovingObject):
         if is_hit:
             self.take_knockback(dir)
             self.game.camera.shake()
+            self.game.sound.play(self.hurt_sound)
         return is_hit
 
     def take_knockback(self, dir):

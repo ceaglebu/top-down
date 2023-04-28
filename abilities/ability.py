@@ -1,4 +1,6 @@
 from game.event_timer import EventTimer
+from game.sounds import Sound
+from game.settings import VOLUME
 import pygame
 
 
@@ -32,7 +34,7 @@ class Ability:
                 self.game.timers.append(EventTimer(self.duration, self.on_ability_end))
             self.pop()
         else:
-            # play failed ability sound?
+            self.game.sound.play(Sound('invalid_action', VOLUME))
             pass
 
     def pop(self):
