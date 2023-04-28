@@ -21,7 +21,7 @@ class Ability:
         self.is_active = False
 
     def can_pop(self):
-        return self.can_use
+        return self.can_use and not self.is_active
 
     def use(self):
         if self.can_pop():

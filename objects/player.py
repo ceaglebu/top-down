@@ -100,7 +100,7 @@ class Player(MovingObject):
     
     def check_use_ability(self):
         for ability in self.abilities:
-            if self.game.keys_down[ability.key]:
+            if self.game.keys_pressed[ability.key]:
                 ability.use()
     
     def hit(self, dir):

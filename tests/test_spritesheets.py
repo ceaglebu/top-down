@@ -1,4 +1,4 @@
-from load_sprites import get_animation, get_image
+from utils.load_sprites import get_animation, get_image
 import pygame,sys,os,time
 
 pygame.init()
