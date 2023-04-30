@@ -102,13 +102,13 @@ class Game:
         return dt
 
     def start_bullet_time(self, length = -1):
-        self.bullet_time = True
+        self.bullet_time += 1
         if length != -1:
             self.timers.append(EventTimer(length, self.end_bullet_time))
         pass
 
     def end_bullet_time(self):
-        self.bullet_time = False
+        self.bullet_time -= 1
         pass
 
 if __name__ == '__main__':
