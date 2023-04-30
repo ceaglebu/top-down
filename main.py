@@ -38,10 +38,9 @@ class Game:
 
         self.level_loader = LevelLoader(self)
 
-        enemy = Enemy(self.layers['enemies'], self)
-        enemy.position = pygame.math.Vector2((WIN_WIDTH / 3, WIN_HEIGHT / 3))
+        Enemy(self.layers['enemies'], self, start_pos= pygame.math.Vector2((WIN_WIDTH / 2, WIN_HEIGHT / 2)))
 
-        self.player = Player(self.layers['player'], self)
+        self.player = Player(self.layers['player'], self, start_pos=(2 * WIN_WIDTH // 3, 2 * WIN_HEIGHT // 3))
         icon = pygame.transform.chop(self.player.image, (11,12,11,11))
         pygame.display.set_icon(icon)
     

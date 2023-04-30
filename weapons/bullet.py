@@ -82,11 +82,11 @@ class Bullet(MovingObject):
 
         if self.gun.owner is self.game.player:
             for enemy in self.game.layers['enemies']:
-                if self.rect.colliderect(enemy.rect):
+                if self.rect.colliderect(enemy.damage_rect):
                 # self.is_overlapping(enemy):
                     self.on_enemy_collide(enemy)
         else:
-            if self.rect.colliderect(self.game.player.collision_rect): 
+            if self.rect.colliderect(self.game.player.damage_rect): 
             # self.is_overlapping(self.game.player):
                 self.on_player_collide()
     

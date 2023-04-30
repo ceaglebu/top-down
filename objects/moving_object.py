@@ -10,7 +10,7 @@ from .game_object import GameObject
 
 class MovingObject(GameObject):
 
-    def __init__(self, group, game, default_image, animation_data=None, start_pos=Vector(WIN_WIDTH / 2, WIN_HEIGHT / 2), start_velocity=Vector(), start_physics_velocity=Vector(), start_acceleration=Vector(), start_phys_acceleration=Vector()):
+    def __init__(self, group, game, default_image, animation_data=None, start_pos=Vector(WIN_WIDTH / 2, WIN_HEIGHT / 2), start_velocity=Vector(), start_physics_velocity=Vector(), start_acceleration=Vector(), start_phys_acceleration=Vector(), collision_forgiveness = 1, damage_forgiveness = 1):
         # Initialize
         super().__init__(group, game, default_image, start_pos=start_pos)
         self.game = game
@@ -28,11 +28,14 @@ class MovingObject(GameObject):
         self.animation = animation_data
         self.is_animated = animation_data is not None
         self.facing = 'right'
-        self.rect.center = ((0, 0))
+        self.rect.center = (start_pos)
 
         # Sprite
-        self.collision_rect = ChildRect(pygame.Rect(self.rect.center, (0,0)).inflate(Vector(self.rect.size)* COLLISION_FORGIVENESS), (0, int(self.rect.height - COLLISION_FORGIVENESS * self.rect.height) / 2))
+        self.collision_forgiveness = collision_forgiveness
+        self.collision_rect = ChildRect(pygame.Rect(self.rect.center, (0,0)).inflate(Vector(self.rect.size)* collision_forgiveness), (0, int(self.rect.height - collision_forgiveness * self.rect.height) / 2))
         self.child_rects.append(self.collision_rect)
+        self.damage_rect = ChildRect(pygame.Rect(self.rect.center, (0,0)).inflate(Vector(self.rect.size)* damage_forgiveness), (0, int(self.rect.height - damage_forgiveness * self.rect.height) / 2))
+        self.child_rects.append(self.damage_rect)
 
         self.timers = []
         self.movement_control = Vector()
