@@ -1,4 +1,4 @@
-from objects.enemy import Enemy
+from objects.enemy import Grunt
 import pygame, sys,os
 from game.settings import *
 from objects.player import Player
@@ -38,7 +38,7 @@ class Game:
 
         self.level_loader = LevelLoader(self)
 
-        Enemy(self.layers['enemies'], self, start_pos= pygame.math.Vector2((WIN_WIDTH / 2, WIN_HEIGHT / 2)))
+        Grunt(self.layers['enemies'], self, start_pos= pygame.math.Vector2((WIN_WIDTH / 2, WIN_HEIGHT / 2)))
 
         self.player = Player(self.layers['player'], self, start_pos=(2 * WIN_WIDTH // 3, 2 * WIN_HEIGHT // 3))
         icon = pygame.transform.chop(self.player.image, (11,12,11,11))
