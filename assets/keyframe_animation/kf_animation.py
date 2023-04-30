@@ -16,10 +16,13 @@ class KF_Animation:
         next_kf_index = 0
         # binary search for what keyframes you are between
         # right now brute forcing it
-        for i, kf in enumerate(self.keyframes):
-            if kf.time > time - self.start_time:
-                next_kf_index = i
-                break
+        if time - self.start_time < self.keyframes[-1].time:
+            for i, kf in enumerate(self.keyframes):
+                if kf.time > time - self.start_time:
+                    next_kf_index = i
+                    break
+        else:
+            next_kf_index = len(self.keyframes) - 1
 
         # return lerp between the previous and next for angle and position
         # returns pos, angle
@@ -42,7 +45,8 @@ if __name__ == '__main__':
     
     animation = KF_Animation([last,next, \
                               Keyframe(2500, (0,0), 0),
-                              Keyframe(2750, (200,-200), 0)])
+                              Keyframe(2750, (200,-200), 0),
+                              Keyframe(3000, (0,0), 0)])
     animation.activate()
     pygame.time.set_timer(pygame.BUTTON_WHEELDOWN, 5000, 1)
     
