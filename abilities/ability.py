@@ -14,8 +14,11 @@ class Ability:
         self.duration = duration
         self.player = player
 
+        self.cooldown_timer = None
+
     def reset_can_use(self):
         self.can_use = True
+        self.cooldown_timer = None
     
     def on_ability_end(self):
         self.is_active = False
@@ -27,8 +30,8 @@ class Ability:
         if self.can_pop():
             if self.cooldown != 0:
                 self.can_use = False
-                self.game.timers.append(EventTimer(
-                    self.cooldown, self.reset_can_use))
+                self.cooldown_timer = EventTimer(self.cooldown, self.reset_can_use)
+                self.game.timers.append(self.cooldown_timer)
             if self.duration != 0:
                 self.is_active = True
                 self.game.timers.append(EventTimer(self.duration, self.on_ability_end))

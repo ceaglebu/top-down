@@ -23,6 +23,12 @@ class Timer:
             return False
         else:
             return True
+    
+    def time_left(self):
+        return self.time - (self.curr_time - self.start_time)
+
+    def percentage_done(self):
+        return (self.curr_time - self.start_time) / self.time
 
 class EventTimer(Timer):
     def __init__(self, time, function, args=None):
