@@ -38,7 +38,6 @@ class Game:
 
         self.level_loader = LevelLoader(self)
         self.level_loader.spawn_enemies()
-        # Grunt(self.layers['enemies'], self, start_pos= pygame.math.Vector2((WIN_WIDTH / 2, WIN_HEIGHT / 2)))
 
         self.player = Player(self.layers['player'], self, start_pos=(WIN_WIDTH // 7, WIN_HEIGHT // 2))
         icon = pygame.transform.chop(self.player.image, (11,12,11,11))

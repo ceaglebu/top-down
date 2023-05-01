@@ -19,11 +19,11 @@ class LevelLoader():
         self.active_level = None
         self.game = game
 
-        self.load(TILESETS['dungeon'])
+        self.load(TILESETS['dungeon'], '1')
         self.change_level(0)
 
-    def load(self, tileset):
-        self.levels.append(Level(os.path.join('levels', '1.txt'), tileset, self.game))
+    def load(self, tileset, level):
+        self.levels.append(Level(os.path.join('levels', f'{level}.txt'), tileset, self.game))
         pass
 
     def change_level(self, level_index):
