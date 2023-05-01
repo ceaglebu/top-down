@@ -1,8 +1,8 @@
-from objects.enemy import Grunt
+from objects.enemies import Grunt
 import pygame, sys,os
 from game.settings import *
 from objects.player import Player
-from objects.particle import * 
+from objects.particle import *
 from game.camera import SpriteGroup3d, CameraGroup
 from game.event_timer import EventTimer
 from game.level_loader import LevelLoader
@@ -37,10 +37,10 @@ class Game:
         self.bullet_time = False
 
         self.level_loader = LevelLoader(self)
+        self.level_loader.spawn_enemies()
+        # Grunt(self.layers['enemies'], self, start_pos= pygame.math.Vector2((WIN_WIDTH / 2, WIN_HEIGHT / 2)))
 
-        Grunt(self.layers['enemies'], self, start_pos= pygame.math.Vector2((WIN_WIDTH / 2, WIN_HEIGHT / 2)))
-
-        self.player = Player(self.layers['player'], self, start_pos=(2 * WIN_WIDTH // 3, 2 * WIN_HEIGHT // 3))
+        self.player = Player(self.layers['player'], self, start_pos=(WIN_WIDTH // 7, WIN_HEIGHT // 2))
         icon = pygame.transform.chop(self.player.image, (11,12,11,11))
         pygame.display.set_icon(icon)
     

@@ -7,8 +7,8 @@ from game.settings import *
 import os
 import pygame
 from pygame.math import Vector2 as Vector
-from .particle import *
-from .moving_object import MovingObject
+from ..particle import *
+from ..moving_object import MovingObject
 
 
 class Enemy(MovingObject):
@@ -123,12 +123,6 @@ class Grunt(Enemy):
                 self.can_act = True
             self.game.timers.append(EventTimer(
                 ENEMY_ACTION * 1000, reset, self))
-
-    def take_damage(self, damage):
-        if self.is_alive:
-            self.health -= damage
-            if self.health <= 0:
-                self.die()
 
     def reset_attack(self):
         self.can_attack = True

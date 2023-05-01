@@ -15,12 +15,16 @@ PAN_SCROLL_SPEED = 100
 
 TILE_TYPES = [
     ("wall", 'X'),
-    ("ground", 'O')
+    ("ground", 'O'),
+    ("spawner", 'E'),
+    ("player", 'P'),
 ]
 
 TILE_COLORS = {
     'X': 'black',
     'O': 'white',
+    'E': 'red',
+    'P': 'green',
 }
 
 

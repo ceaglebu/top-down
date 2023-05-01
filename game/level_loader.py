@@ -5,22 +5,25 @@ from game.camera import SpriteGroup3d
 from game.settings import * 
 from pygame.math import Vector2 as Vector
 from objects.game_object import GameObject
+import random as rand
+from objects.enemies import *
 
 COLLIDABLE = ['X']
-GROUND = ['O']
+GROUND = ['O', 'E', 'P']
 
 # Handle changes in level
 class LevelLoader():
     def __init__(self, game):
         from assets.environment.tilesets import TILESETS
         self.levels = []
+        self.active_level = None
         self.game = game
 
         self.load(TILESETS['dungeon'])
         self.change_level(0)
 
     def load(self, tileset):
-        self.levels.append(Level(os.path.join('levels', 'test.txt'), tileset, self.game))
+        self.levels.append(Level(os.path.join('levels', '1.txt'), tileset, self.game))
         pass
 
     def change_level(self, level_index):
@@ -30,11 +33,12 @@ class LevelLoader():
             elif isinstance(v, ParticleGroup):
                 v.particles.clear()
         
-        self.game.layers['ground'] = self.levels[level_index].ground
-        self.game.layers['tiles'] = self.levels[level_index].walls
-        
+        self.active_level = self.levels[level_index]
+        self.game.layers['ground'] = self.active_level.ground
+        self.game.layers['tiles'] = self.active_level.walls
     
-
+    def spawn_enemies(self):
+        self.active_level.spawn_enemies()
 
 
 # Handle loading of itself
@@ -49,6 +53,7 @@ class Level():
         
         self.tile_types = [[]]
         self.tiles = []
+        self.spawners = []
         self.load()
     
     def load(self):
@@ -63,7 +68,7 @@ class Level():
 
         for y, row in enumerate(self.tile_types):
             for x, column in enumerate(row):
-                if column == 'X':
+                if column in COLLIDABLE:
                     self.tiles[y][x] = 1
 
                     mask = [0,1,0,1,1,1,0,1,0]
@@ -79,7 +84,7 @@ class Level():
                     Tile(self.walls, self.game, (x, y), self.tileset[
                         ','.join(str(m) for m in mask)
                     ])
-                elif column == 'O':
+                elif column in GROUND:
                     mask = [0,0,0,0,0,0,0,0,0]
                     if x != 0 and self.tile_types[y][x-1] in COLLIDABLE:
                         mask[3] = 1
@@ -93,6 +98,14 @@ class Level():
                     Tile(self.ground, self.game, (x, y), self.tileset[
                         ','.join(str(m) for m in mask)
                     ])
+                
+                if column == 'E':
+                    self.spawners.append(Spawner(self.game, self.game.layers['enemies'], (x, y), [(Grunt, 1)]))
+        
+    def spawn_enemies(self):
+        for spawner in self.spawners:
+            if rand.random() <= spawner.chance:
+                spawner.spawn()
 
 # Object being displayed on screen/interacted with by gameobjects
 class Tile(GameObject):
@@ -100,3 +113,18 @@ class Tile(GameObject):
         super().__init__(group, game, image, Vector(coord) * TILE_SIZE)
         pass
 
+class Spawner():
+    def __init__(self, game, layer, coord, enemy_probability):
+        self.chance = .5
+        self.game = game
+        self.layer = layer
+        self.enemy_probability = enemy_probability
+        self.coord = coord
+
+    def spawn(self):
+        enemy_types = list(map(lambda t: t[0], self.enemy_probability))
+        enemy_probabilities = list(map(lambda t: t[1], self.enemy_probability))
+        
+        enemy = rand.choices(enemy_types, enemy_probabilities, k=1)[0]
+
+        enemy(self.layer, self.game, Vector(self.coord) * TILE_SIZE + Vector(TILE_SIZE,TILE_SIZE) * .5)
