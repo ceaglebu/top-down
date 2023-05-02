@@ -22,13 +22,13 @@ class Game:
         
         self.layers = {
             'ground': SpriteGroup3d(-1),
+            'particles': ParticleGroup(0),
             'tiles': SpriteGroup3d(1),
             'bullets': SpriteGroup3d(2),
             'player-particles': ParticleGroup(3),
             'player': SpriteGroup3d(4),
             'enemies': SpriteGroup3d(4),
             'accessories': SpriteGroup3d(6),
-            'particles': ParticleGroup(7)
         }
 
         self.camera = CameraGroup(self)
@@ -54,7 +54,7 @@ class Game:
             self.keys_down = pygame.key.get_pressed()
             self.keys_pressed = [0 for _ in range(512)]
             self.mouse_buttons = pygame.mouse.get_pressed()
-            self.mouse_pos = Vector(pygame.mouse.get_pos())
+            self.mouse_pos = Vector(pygame.mouse.get_pos()) + self.player.position - Vector(WIN_WIDTH, WIN_HEIGHT) / 2
 
             for event in self.events:
                 if event.type == pygame.QUIT:

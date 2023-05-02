@@ -22,7 +22,9 @@ class CameraGroup:
         # apply offset
         mouse = pygame.mouse.get_pos()
         
-        self.mouse_offset = (Vector(mouse) - Vector(WIN_WIDTH / 2, WIN_HEIGHT / 2)) * -.015
+        self.mouse_offset = (Vector(mouse) - Vector(WIN_WIDTH / 2, WIN_HEIGHT / 2)) * -.3
+
+        self.player_offset = -self.game.player.position + Vector(WIN_WIDTH, WIN_HEIGHT) / 2
 
         if self.is_shaking:
             self.shake_offset += Vector(rand.randint(-self.shake_intensity,self.shake_intensity) * dt, rand.randint(-self.shake_intensity,self.shake_intensity) * dt)
@@ -32,7 +34,7 @@ class CameraGroup:
             elif self.shake_offset.magnitude() > 0:
                 self.shake_offset = Vector()
 
-        self.offset = self.mouse_offset + self.shake_offset
+        self.offset = self.mouse_offset + self.shake_offset + self.player_offset
 
     
     def shake(self, intensity = CAMERA_SHAKE_INTENSITY, length = 150):

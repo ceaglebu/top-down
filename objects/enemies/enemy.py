@@ -60,7 +60,7 @@ class Enemy(MovingObject):
             self.gun.kill()
             self.kill()
             self.game.camera.shake(intensity=ENEMY_DIES_SHAKE_INTENSITY)
-            self.game.sound.play(Sound('enemy_death', VOLUME))
+            self.game.sound.play(Sound('enemy_death', VOLUME /2 ))
         self.is_alive = False
 
         death_time = 20

@@ -82,14 +82,6 @@ class MovingObject(GameObject):
         for child in self.child_rects:
             child.centerx = self.position.x + child.offset.x
 
-        # Check for window border collisions
-        if self.rect.right < 0:
-            self.rect.left = WIN_WIDTH
-            self.position = Vector(self.rect.center)
-        elif self.rect.left > WIN_WIDTH:
-            self.rect.right = 0
-            self.position = Vector(self.rect.center)
-
         # Check for object collisions
         x_collision = False
         for tile in self.game.layers['tiles']:
@@ -114,13 +106,6 @@ class MovingObject(GameObject):
         self.rect.centery = self.position.y
         for child in self.child_rects:
             child.centery = self.position.y + child.offset.y
-
-        if self.rect.bottom < 0:
-            self.rect.top = WIN_HEIGHT
-            self.position = Vector(self.rect.center)
-        elif self.rect.top > WIN_HEIGHT:
-            self.rect.bottom = 0
-            self.position = Vector(self.rect.center)
 
         y_collision = False
         for tile in self.game.layers['tiles']:

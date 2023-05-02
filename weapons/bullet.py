@@ -71,10 +71,7 @@ class Bullet(MovingObject):
         return overlap.count() > 0
 
     def handle_collision(self):
-        # self.collision_mask = pygame.mask.from_surface(self.image)
-        off_screen = self.rect.right < 0 or self.rect.left > WIN_WIDTH or self.rect.bottom < 0 or self.rect.top > WIN_HEIGHT
-        if off_screen:
-            self.kill()
+
         for tile in self.game.layers['tiles']:
             if self.rect.colliderect(tile.rect):
             # self.is_overlapping(tile):
