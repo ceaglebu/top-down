@@ -1,9 +1,11 @@
-from behaviors.behavior import Behavior
-import pygame
+import pygame,sys,os
 from pygame.math import Vector2 as Vector
 from game.settings import *
+from game.event_timer import EventTimer, Timer
+from utils.load_sprites import get_animation
 from .child_rect import ChildRect
 from .particle import *
+from abc import ABC, abstractmethod
 from .game_object import GameObject
 
 class MovingObject(GameObject):
@@ -37,8 +39,9 @@ class MovingObject(GameObject):
 
         self.timers = []
         self.movement_control = Vector()
-        self.behavior = behavior
 
+    def think(self, dt):
+        raise NameError('think was not implemented!!')
     
     def get_animation_by_key(self, key):
         return self.animation.animations[key]
@@ -127,12 +130,12 @@ class MovingObject(GameObject):
 
 
     def update(self, dt):
-        self.behavior.think(dt)
+        self.think(dt)
         if self.is_animated:
             self.handle_animation(dt)
-        self.behavior.move(dt)
-        collide = self.behavior.handle_collision()
-        self.behavior.post_collision(dt, collide)
+        self.move(dt)
+        collide = self.handle_collision()
+        self.post_collision(dt, collide)
 
         for timer in self.timers:
             timer.update()
