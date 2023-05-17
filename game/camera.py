@@ -10,6 +10,9 @@ class SpriteGroup3d(pygame.sprite.Group):
         super().__init__()
         self.z = z
 
+    def empty(self):
+        self.spritedict = {}
+
 class CameraGroup:
     def __init__(self, game):
         self.game = game

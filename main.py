@@ -5,7 +5,8 @@ from objects.player import Player
 from objects.particle import *
 from game.camera import SpriteGroup3d, CameraGroup
 from game.event_timer import EventTimer
-from game.level_loader import LevelLoader
+# from game.level_loader import LevelLoader
+from levels.random_level import LevelLoader
 from game.sounds import SoundHandler
 
 class Game:
@@ -37,9 +38,20 @@ class Game:
         self.bullet_time = False
 
         self.level_loader = LevelLoader(self)
+        # self.level_loader.create_level_from_dict({
+        # '0,0': 'X', '1,0': 'X', '2,0': 'X', '3,0': 'X', '4,0': 'X', '5,0': 'X',
+        # '0,1': 'X', '1,1': 'O', '2,1': 'O', '3,1': 'O', '4,1': 'O', '5,1': 'X',
+        # '0,2': 'X', '1,2': 'O', '2,2': 'E', '3,2': 'O', '4,2': 'O', '5,2': 'X',
+        # '0,3': 'X', '1,3': 'O', '2,3': 'P', '3,3': 'O', '4,3': 'O', '5,3': 'X',
+        # '0,4': 'X', '1,4': 'O', '2,4': 'O', '3,4': 'O', '4,4': 'O', '5,4': 'X',
+        # '0,5': 'X', '1,5': 'X', '2,5': 'X', '3,5': 'X', '4,5': 'X', '5,5': 'X',
+        # })
+        self.level_loader.load_random_level()
+
+        # self.level_loader = LevelLoader(self)
         self.level_loader.spawn_enemies()
 
-        self.player = Player(self.layers['player'], self, start_pos=(WIN_WIDTH // 7, WIN_HEIGHT // 2))
+        # self.player = Player(self.layers['player'], self, start_pos=(0,0)) #(WIN_WIDTH // 7, WIN_HEIGHT // 2))
         icon = pygame.transform.chop(self.player.image, (11,12,11,11))
         pygame.display.set_icon(icon)
     
@@ -73,6 +85,7 @@ class Game:
             for layer in self.layers.values():
                 layer.update(dt)
             
+            self.level_loader.update(dt)
             self.camera.update(dt)
             self.camera.draw()
             self.mouse_pos = self.mouse_pos + self.camera.offset
@@ -94,7 +107,7 @@ class Game:
         sys.exit()
 
     def get_dt(self):
-        dt = self.clock.tick(60) / 1000
+        dt = self.clock.tick(144) / 1000
         if self.bullet_time:
             dt *= BULLET_TIME_FACTOR
         return dt

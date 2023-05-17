@@ -293,6 +293,6 @@ if __name__ == '__main__':
     pygame.init()
     screen = pygame.display.set_mode((WIN_WIDTH, WIN_HEIGHT))
     pygame.display.set_caption("GEARS Gear")
-    editor = Editor('2.txt')
+    editor = Editor('1.txt')
     clock = pygame.time.Clock()
     editor.run(clock)

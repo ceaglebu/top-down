@@ -13,7 +13,6 @@ class Ability:
         self.key = key
         self.duration = duration
         self.player = player
-
         self.cooldown_timer = None
 
     def reset_can_use(self):
@@ -38,7 +37,7 @@ class Ability:
             self.pop()
         else:
             if self.game.keys_pressed[self.key]:
-                self.game.sound.play(Sound('invalid_action', VOLUME))
+                self.game.sound.play(Sound('invalid_action', VOLUME / 2))
 
     def pop(self):
         pass

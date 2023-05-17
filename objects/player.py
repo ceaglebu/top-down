@@ -28,14 +28,14 @@ class Player(MovingObject):
         animation_data = AnimationData(animations, animations['idle'])
         super().__init__(group, game, animations['idle'][0], animation_data, start_pos=start_pos, collision_forgiveness=PLAYER_COLLISION_FORGIVENESS, damage_forgiveness=PLAYER_DAMAGE_FORGIVENESS)
  
-        # self.gun = PlayerShotgun(
-        #     gun_image= pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'shotgun.png')), .1 * PLAYER_SCALE).convert_alpha(),
-        #     bullet_image= get_image(pygame.image.load(os.path.join('assets', 'misc', 'bullet.png')).convert_alpha(), (16,16), (8,8), PLAYER_SCALE * 4/5, (11,9), (5,4)).convert_alpha(),
-        #     reload_time= RELOAD_TIME * 2, speed= BULLET_SPEED['player'],
-        #     count=5, angle_range = (-15, 15),
-        #     damage= 3,
-        #     group= self.game.layers['accessories'], game= self.game, owner= self, 
-        #     offset= Vector(4, 4) * PLAYER_SCALE)
+        self.gun = PlayerShotgun(
+            gun_image= pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'shotgun.png')), .1 * PLAYER_SCALE).convert_alpha(),
+            bullet_image= get_image(pygame.image.load(os.path.join('assets', 'misc', 'bullet.png')).convert_alpha(), (16,16), (8,8), PLAYER_SCALE * 4/5, (11,9), (5,4)).convert_alpha(),
+            reload_time= RELOAD_TIME * 2, speed= BULLET_SPEED['player'],
+            count=5, angle_range = (-15, 15),
+            damage= 3,
+            group= self.game.layers['accessories'], game= self.game, owner= self, 
+            offset= Vector(4, 4) * PLAYER_SCALE)
 
         self.shoot_sound = Sound('shoot', VOLUME)
         self.hurt_sound = Sound('hurt', VOLUME / 2)
@@ -43,14 +43,14 @@ class Player(MovingObject):
         self.roll = abilities.roll.Roll(game, self)
         self.ability = abilities.reflect.Reflect(game, self)
         self.abilities = [self.roll, self.ability]
-        self.gun = PlayerSemiAuto(
-            gun_image= pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'shotgun.png')), .1 * PLAYER_SCALE).convert_alpha(),
-            bullet_image= get_image(pygame.image.load(os.path.join('assets', 'misc', 'bullet.png')).convert_alpha(), (16,16), (8,8), PLAYER_SCALE * 4/5, (11,9), (5,4)).convert_alpha(),
-            reload_time= RELOAD_TIME, speed= BULLET_SPEED['player'],
-            angle_range = (-10, 10),
-            damage= 20,
-            group= self.game.layers['accessories'], game= self.game, owner= self, 
-            offset= Vector(4, 4) * PLAYER_SCALE)
+        # self.gun = PlayerSemiAuto(
+        #     gun_image= pygame.transform.scale_by(pygame.image.load(os.path.join('assets', 'misc', 'shotgun.png')), .1 * PLAYER_SCALE).convert_alpha(),
+        #     bullet_image= get_image(pygame.image.load(os.path.join('assets', 'misc', 'bullet.png')).convert_alpha(), (16,16), (8,8), PLAYER_SCALE * 4/5, (11,9), (5,4)).convert_alpha(),
+        #     reload_time= RELOAD_TIME, speed= BULLET_SPEED['player'],
+        #     angle_range = (-10, 10),
+        #     damage= 20,
+        #     group= self.game.layers['accessories'], game= self.game, owner= self, 
+        #     offset= Vector(4, 4) * PLAYER_SCALE)
 
         # State
 

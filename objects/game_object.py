@@ -3,7 +3,11 @@ from pygame.math import Vector2 as Vector
 
 class GameObject(pygame.sprite.Sprite):
     def __init__(self, group, game, default_image, start_pos=Vector(), angle=0, flip=1):
-        super().__init__(group)
+        # super().__init__(group)
+        if group != None:
+            super().__init__(group)
+        else:
+            super().__init__()
         self.group = group
         self.game = game
         self.default_image = default_image
