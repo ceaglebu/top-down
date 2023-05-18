@@ -7,9 +7,6 @@ import random as rand
 from objects.enemies import *
 from levels.level_generator import LevelGenerator
 
-COLLIDABLE = ['X']
-GROUND = ['O', 'P', 'E']
-
 class LevelLoader:
     def __init__(self, game):
         self.game = game
