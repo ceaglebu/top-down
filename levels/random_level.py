@@ -18,7 +18,13 @@ class LevelLoader:
         self.create_level_from_dict(LevelGenerator().generate_level_dict())
     
     def load_level_from_file(self, path):
-        pass
+        level_template = {}
+        with open(path, 'r') as file:
+            for x, line in enumerate(file):
+                for y, char in enumerate(line):
+                    if char in GROUND or char in COLLIDABLE:  # Load both ground and wall tiles
+                        level_template[f'{x},{y}'] = char
+        self.create_level_from_dict(level_template)
 
     def create_level_from_dict(self, dict):
         from assets.environment.tilesets import TILESETS
@@ -72,7 +78,8 @@ class LevelLoader:
                 self.game.player = Player(self.game.layers['player'], self.game, Vector((x, y)) * TILE_SIZE)
             elif tile_type == 'E':
                 print('spawner')
-                chunk.spawners.append(Spawner(self.game, self.game.layers['enemies'], chunk, (x,y), [(Grunt, 1)]))
+                chunk.spawners.append(Spawner(self.game, self.game.layers['enemies'], chunk, (x,y), 
+                    [(Grunt, 0.7), (Sniper, 0.3)]))
         self.level = level
         self.handle_chunk_update()   
 

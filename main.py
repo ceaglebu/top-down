@@ -38,8 +38,8 @@ class Game:
         self.bullet_time = False
 
         self.level_loader = LevelLoader(self)
-        self.level_loader.load_random_level()
-
+        # self.level_loader.load_random_level()
+        self.level_loader.load_level_from_file('./levels/1.txt')
         self.level_loader.spawn_enemies()
 
         icon = pygame.transform.chop(self.player.image, (11,12,11,11))
